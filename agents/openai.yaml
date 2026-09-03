@@ -1,0 +1,4 @@
+interface:
+  display_name: "目标实现推演"
+  short_description: "把简单目标推演成经过方案级验证、可用于现实执行的实施指南"
+  default_prompt: "使用 $goal-orchestrator，把我的简单目标转化为经过方案级验证、可用于现实执行的实施指南。"

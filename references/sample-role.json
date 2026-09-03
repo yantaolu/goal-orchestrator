@@ -1,0 +1,183 @@
+{
+  "schema_version": "3.0",
+  "role_id": "R3",
+  "name": "macOS RAW Application Developer",
+  "role_type": "specialist",
+  "mission": "Produce a coherent macOS RAW application implementation blueprint that is detailed enough for plan-level review and later professional handoff without claiming that a real build exists.",
+  "lifecycle": "phase-bound",
+  "lifecycle_stages": [
+    "produce",
+    "integrate"
+  ],
+  "contribution_modes": [
+    "produce",
+    "integrate"
+  ],
+  "activation_conditions": [
+    "ART1 defines the macOS MVP workflow and acceptance criteria",
+    "ART2 defines the RAW pipeline interfaces for Sony, Nikon, and Fujifilm files"
+  ],
+  "deactivation_conditions": [
+    "ART5 is accepted by the independent compatibility and quality gate",
+    "The workflow stops because a critical input contract cannot be bounded"
+  ],
+  "responsibilities": [
+    "Define the application module boundaries and data flow",
+    "Produce implementation-blueprint artifacts for import, editing, preview, and export",
+    "Integrate the accepted RAW pipeline and rendering interfaces",
+    "Revise specification-level defects returned by independent testing"
+  ],
+  "capability_ids": [
+    "CAP5",
+    "CAP6"
+  ],
+  "subgoal_ids": [
+    "SG3",
+    "SG4"
+  ],
+  "inputs": [
+    {
+      "input_id": "ART1",
+      "description": "Accepted macOS MVP workflow and product acceptance criteria",
+      "provider_ids": [
+        "R1"
+      ],
+      "acceptance_criteria": [
+        "Defines the import, edit, preview, and export path",
+        "Separates MVP requirements from later capabilities"
+      ]
+    },
+    {
+      "input_id": "ART2",
+      "description": "Accepted RAW decoding and color-pipeline interface contract",
+      "provider_ids": [
+        "R2"
+      ],
+      "acceptance_criteria": [
+        "Names supported camera-brand families",
+        "Defines failure and fallback behavior",
+        "Does not claim unperformed camera-file tests"
+      ]
+    }
+  ],
+  "expected_outputs": [
+    {
+      "artifact_id": "ART5",
+      "name": "macOS implementation blueprint",
+      "description": "Module map, interface definitions, pseudocode, dependency plan, proposed change sequence, and unresolved build risks",
+      "lifecycle_stage": "produce",
+      "contribution_mode": "produce",
+      "consumer_ids": [
+        "R5",
+        "R6",
+        "R0"
+      ],
+      "acceptance_criteria": [
+        "Covers import, non-destructive edits, preview, and export",
+        "Maps RAW and rendering interfaces to application modules",
+        "Exposes error handling and unsupported-file behavior",
+        "Labels every runtime or performance claim as unverified"
+      ],
+      "independent_validator_ids": [
+        "R5"
+      ],
+      "real_world_checks_unperformed": [
+        "No source code was compiled or run",
+        "No real Sony, Nikon, or Fujifilm RAW file was opened",
+        "No performance, memory, crash, or export-quality benchmark was executed"
+      ],
+      "created_in_simulation": true
+    }
+  ],
+  "dependencies": {
+    "role_ids": [
+      "R1",
+      "R2",
+      "R4"
+    ],
+    "artifact_ids": [
+      "ART1",
+      "ART2",
+      "ART4"
+    ]
+  },
+  "collaboration_targets": [
+    {
+      "role_id": "R2",
+      "purpose": "Resolve RAW decoding, metadata, and color-pipeline interface questions",
+      "cadence": "per-handoff",
+      "artifact_ids": [
+        "ART2",
+        "ART5"
+      ]
+    },
+    {
+      "role_id": "R4",
+      "purpose": "Integrate preview-rendering and cache contracts",
+      "cadence": "per-round",
+      "artifact_ids": [
+        "ART4",
+        "ART5"
+      ]
+    },
+    {
+      "role_id": "R5",
+      "purpose": "Receive specification-level defects and revise the implementation blueprint",
+      "cadence": "at-gate",
+      "artifact_ids": [
+        "ART5"
+      ]
+    }
+  ],
+  "decision_rights": {
+    "can_decide": [
+      "Choose internal macOS module boundaries within accepted product and pipeline contracts",
+      "Select the proposed integration sequence for accepted component interfaces"
+    ],
+    "must_consult": [
+      "Consult R2 before changing RAW or color-pipeline contracts",
+      "Consult R4 before changing rendering or cache interfaces"
+    ],
+    "must_escalate": [
+      "Escalate product-scope conflicts to R0",
+      "Escalate a requirement that can only be evaluated through a real build"
+    ]
+  },
+  "simulation_actions": [
+    "Produce a module map and interface definitions from accepted assumptions",
+    "Write pseudocode and a proposed change sequence from accepted contracts",
+    "Review interface compatibility and revise specification-level defects",
+    "Integrate accepted component artifacts into an implementation blueprint for later handoff"
+  ],
+  "forbidden_real_actions": [
+    "Create or modify a real source repository",
+    "Compile, run, profile, sign, notarize, or publish an application",
+    "Claim that real camera files, devices, or macOS versions were tested",
+    "Present estimated runtime behavior as observed evidence"
+  ],
+  "constraints": [
+    "Target macOS only",
+    "Prioritize Sony, Nikon, and Fujifilm RAW families",
+    "Use only user facts, accepted artifacts, and explicit assumptions",
+    "Mark all produced artifacts as created in simulation and pending real implementation"
+  ],
+  "success_criteria": [
+    {
+      "criterion": "Implementation completeness",
+      "indicator": "Every MVP workflow step maps to a module, interface, and failure path",
+      "target": "All accepted MVP steps covered",
+      "evidence_source": "ART5 and its independent review event"
+    },
+    {
+      "criterion": "Boundary integrity",
+      "indicator": "Runtime and compatibility claims are separated from plan-level design findings",
+      "target": "Zero claims of an actual build or executed test",
+      "evidence_source": "ART5 evidence labels and unperformed-check list"
+    }
+  ],
+  "assumptions": [
+    "A1: The first release uses a non-destructive editing model",
+    "A2: Camera-brand support can be defined initially at family level pending real sample files"
+  ],
+  "confidence": 0.86
+}
