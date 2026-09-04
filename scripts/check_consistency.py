@@ -535,8 +535,67 @@ def check_adaptive_contracts(root: Path, results: Results) -> None:
         if phrase not in protocol:
             results.fail(f"simulation-protocol.md is missing adaptive boundary {phrase!r}")
 
+    invariant_phrases = {
+        "comparison prototype discipline": (
+            "运行表现、兼容性或体验",
+            "同一代表性真实数据集",
+            "保持或切换阈值",
+            "最终选型前完成最小可比垂直切片",
+            "双候选对照",
+            "候选轴",
+            "平台轴",
+            "两者结果齐备后",
+            "初步或倾向性推荐",
+            "待填预算变量",
+            "全部硬门通过则保持",
+            "另一候选",
+        ),
+        "concise decision closure": (
+            "适用边界或升级条件",
+            "关键验证门",
+        ),
+        "visible coordinator and independent validation": (
+            "R0",
+            "独立验证者",
+            "设计者",
+            "实现者",
+        ),
+    }
+    invariant_sources = {
+        "comparison prototype discipline": (
+            "SKILL.md",
+            "references/output-contracts.md",
+            "references/examples.md",
+            "assets/orchestration-report-template.md",
+        ),
+        "concise decision closure": (
+            "SKILL.md",
+            "references/output-contracts.md",
+            "references/examples.md",
+            "assets/orchestration-report-template.md",
+        ),
+        "visible coordinator and independent validation": (
+            "SKILL.md",
+            "references/output-contracts.md",
+            "references/role-schema.md",
+            "references/simulation-protocol.md",
+            "references/examples.md",
+            "assets/orchestration-report-template.md",
+        ),
+    }
+    for invariant, phrases in invariant_phrases.items():
+        for relative in invariant_sources[invariant]:
+            text = texts.get(relative)
+            if text is None:
+                text = read_text(root / relative, results)
+            missing = [phrase for phrase in phrases if phrase not in text]
+            if missing:
+                results.fail(
+                    f"{relative} is missing {invariant} evidence: {', '.join(repr(item) for item in missing)}"
+                )
+
     if len(results.errors) == start_errors:
-        results.passed("cross-file contracts preserve adaptive routing, natural output, and truthful evidence")
+        results.passed("cross-file contracts preserve adaptive routing, concise closure, comparison discipline, and independent validation")
 
 
 def check_evals(root: Path, results: Results) -> None:
@@ -626,6 +685,21 @@ def check_evals(root: Path, results: Results) -> None:
         for expectation in standard_expectations
     ):
         results.fail("standard depth eval must fail a default solution that is only a short summary")
+
+    team_expectations = cases_by_id.get(5, {}).get("expectations", [])
+    for phrase in ("首次提到协调者时明确标识唯一 `R0`", "领域自然的专业职称", "独立验证者不同于其设计者和实现者", "R0 不担任独立验证者"):
+        if not any(isinstance(expectation, str) and phrase in expectation for expectation in team_expectations):
+            results.fail(f"team eval must cover {phrase!r} without prescribing a domain role name")
+
+    comparison_expectations = cases_by_id.get(6, {}).get("expectations", [])
+    for phrase in ("两种候选", "同一代表性真实数据集", "同一目标 Windows 和 macOS", "同一任务与预算", "Electron/Tauri 是候选轴", "Windows/macOS 是两者共同覆盖的平台轴", "最终选型前完成最小可比垂直切片", "不得只验证推荐候选并把另一候选推迟到失败后", "逐项列出 Electron 与 Tauri 各自完成同一端到端任务", "两者结果齐备后才应用阈值", "第二候选设为第一候选失败后的备选", "原型开始前以用户给定值或待填预算变量", "不虚构固定数值", "当前候选全部硬门通过则保持", "另一候选在相同条件下通过", "新增关键兼容或维护阻碍", "初步或倾向性推荐", "不得声称已经证实最终选型"):
+        if not any(isinstance(expectation, str) and phrase in expectation for expectation in comparison_expectations):
+            results.fail(f"comparison eval must cover prototype control {phrase!r}")
+
+    concise_expectations = cases_by_id.get(7, {}).get("expectations", [])
+    for phrase in ("不可省略至少一个适用边界或升级条件", "不可省略一个最关键的原型或验证条件", "一页式简要形态"):
+        if not any(isinstance(expectation, str) and phrase in expectation for expectation in concise_expectations):
+            results.fail(f"concise eval must cover closure without bloat: {phrase!r}")
 
     if len(results.errors) == start_errors:
         results.passed("canonical behavior evals cover adaptive routing plus concise, standard, and deep solution depth")
