@@ -1,0 +1,82 @@
+[
+  {
+    "query": "我要管理 2000 人的事业部。",
+    "should_trigger": true
+  },
+  {
+    "query": "我想让社区咖啡店未来三个月稳定增长，但不知道从哪里开始。",
+    "should_trigger": true
+  },
+  {
+    "query": "我的目标是做一款帮助老人识别诈骗风险的 App。",
+    "should_trigger": true
+  },
+  {
+    "query": "公司准备从区域制改成产品事业群制，帮我设计这次组织变革。",
+    "should_trigger": true
+  },
+  {
+    "query": "给我一份 2000 人事业部组织架构方案，不要实施计划。",
+    "should_trigger": true
+  },
+  {
+    "query": "推演重大客诉同时涉及销售、交付和产品时的决策链。",
+    "should_trigger": true
+  },
+  {
+    "query": "我想在三个月内从不会游泳练到连续游 400 米，每周能练三次。",
+    "should_trigger": true
+  },
+  {
+    "query": "比较 Electron 和 Tauri，给离线桌面知识库一个技术方案。",
+    "should_trigger": true
+  },
+  {
+    "query": "React Native 和 Supabase 已经定了，帮两名开发者安排十二周落地。",
+    "should_trigger": true
+  },
+  {
+    "query": "我们想把一次性项目收入转成可持续订阅业务，应该怎么规划？",
+    "should_trigger": true
+  },
+  {
+    "query": "把这个 CSV 里的 2000 条员工数据导入系统。",
+    "should_trigger": false
+  },
+  {
+    "query": "把用户表的 mobile 字段改名为 phone。",
+    "should_trigger": false
+  },
+  {
+    "query": "法国首都是哪里？",
+    "should_trigger": false
+  },
+  {
+    "query": "运行现有的单元测试并告诉我失败项。",
+    "should_trigger": false
+  },
+  {
+    "query": "把这段中文翻译成英文。",
+    "should_trigger": false
+  },
+  {
+    "query": "查一下明天北京的天气。",
+    "should_trigger": false
+  },
+  {
+    "query": "按已经写好的迁移脚本把 staging 数据迁到测试库。",
+    "should_trigger": false
+  },
+  {
+    "query": "给这封邮件润色一下，语气礼貌但坚定。",
+    "should_trigger": false
+  },
+  {
+    "query": "把订单导出成 Excel，并按月份做一个透视表。",
+    "should_trigger": false
+  },
+  {
+    "query": "帮我看这段报错是什么意思。",
+    "should_trigger": false
+  }
+]

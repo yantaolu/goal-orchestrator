@@ -2,7 +2,7 @@
 
 本模板用于用户明确要求独立报告、专业交接文档或审计材料时。它是模块库，不是固定大纲：先理解用户的交付意图，再选用必要模块；删除所有无关模块、说明文字和占位符。
 
-不要把内部的 `solution_design`、`goal_realization`、`implementation_orchestration`、`concise`、`standard`、`deep`、`none`、`responsibility_map` 或 `simulated_team` 标签显示在成品中。
+不要把内部的 `solution_design`、`goal_realization`、`implementation_orchestration`、`concise`、`standard`、`deep`、`structured`、`none`、`responsibility_map` 或 `simulated_team` 标签显示在成品中。
 
 普通“给我一份方案”按 `standard` 深度使用方案模块；它不是短答模板。只有用户明确要求概要、快速建议或一页结论时才采用 `concise`。`deep` 方案在标准模块之外按相关性加入契约、模型、状态和非功能约束。实施和组织模块从轻时，保留方案模块的领域细节。
 
@@ -66,16 +66,24 @@
 
 ## 目标实现模块
 
-用户只给出目标时，先在这里形成实质方案，再接实施模块。不能用目标拆解或团队名单代替解决方案。
+用户只给出目标时，先从原话主动形成可规划意图，再形成实质方案、规划和必要的情景推演。不能把交付物分类问回用户，也不能用目标拆解或团队名单代替解决方案。
 
 ```markdown
-## {{建议把目标做成什么}}
+## {{对目标的暂定理解}}
 
-{{说明受益者、价值、范围、核心做法和关键取舍。}}
+{{用自然语言说明期望的现实变化、对象或受益者、成功信号和影响路线的最小假设。能条件推进时先交付，不写成问卷。}}
+
+## {{目标实现后怎样运行}}
+
+{{说明目标状态、领域机制、范围和关键取舍。经营目标写清客群、转化、复购或单位经济性；管理目标写清组织单元、授权、目标传导、信息回流和异常升级；产品目标写清价值闭环和核心能力。}}
 
 ## {{实现路径}}
 
-{{给出与复杂度匹配的阶段、依赖、阶段成果和验收条件。简单目标可以用自然步骤。}}
+{{给出关键结果、依赖、与复杂度匹配的阶段、阶段成果、判断门、失败路线、调整信号和现实第一步。简单目标可以用自然步骤；大型组织、组织变革等不能因输入短而降成概要。}}
+
+## {{情景推演带来的修订}}
+
+{{仅在 simulation_depth 为 light 或 structured 时保留。选择少量高辨识度的正常、压力或失败场景，沿触发、感知、决策、交接、结果和恢复向前推演；明确“暴露了什么缺口，因此把方案从什么改成什么”。风险清单不算推演。}}
 ```
 
 当路径具有三步以上依赖、并行汇合或决策分支，且图比短列表更清楚时，可替换为目标相关 Mermaid：
@@ -137,7 +145,7 @@ flowchart LR
 
 ## 完整模拟组织模块（严格按需）
 
-只有复杂协作、跨领域交接、独立验证、高风险或用户明确要求团队推演时加入本模块，并先应用角色和模拟协议。方案仍应出现在团队之前。
+只有复杂跨专业生产、交接、独立验证、高风险审查或用户明确要求虚拟团队时加入本模块，并先应用角色和协作审查协议。方案仍应出现在团队之前。目标中的事业部等真实组织、对重大客诉等组织运行场景的推演，都不等于本模块。
 
 ```markdown
 > 以下组织协作与审查属于方案推演，尚未执行现实开发、测试或发布；相关结论仍需按文中的验证条件确认。
@@ -208,21 +216,26 @@ sequenceDiagram
 
 ## 结构化附录（可选）
 
-仅在用户要求、系统交接或审计需要时添加。根对象采用 3.2；完整角色对象继续采用 3.0。
+仅在用户要求、系统交接或审计需要时添加。根对象采用 3.3；完整角色对象继续采用 3.0。
 
 ```yaml
-schema_version: "3.2"
+schema_version: "3.3"
 request_mode: "<solution_design | goal_realization | implementation_orchestration>"
 solution_status: "<to_design | partially_defined | fixed>"
 solution_depth: "<concise | standard | deep>"
+planning_depth: "<light | standard | deep>"
+simulation_depth: "<none | light | structured>"
 implementation_depth: "<none | light | detailed>"
 organization_depth: "<none | responsibility_map | simulated_team>"
 deliverable_type: "<solution | solution_and_implementation | implementation_plan>"
 external_actions_performed: []
+goal_brief: {}
 solution: {}
+planning: {}
 implementation: {}
 evidence: {}
-simulation: null
+scenario_simulation: null
+team_simulation: null
 ```
 
-如果存在完整组织，`simulation` 记录 `execution_mode: simulation`、审查事件和角色；每个角色保持 `schema_version: "3.0"`。
+`scenario_simulation` 可在没有虚拟团队时记录场景与方案修订。如果存在完整虚拟组织，`team_simulation` 记录 `execution_mode: simulation`、审查事件和角色；每个角色保持 `schema_version: "3.0"`。

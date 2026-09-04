@@ -1,4 +1,4 @@
 interface:
   display_name: "目标实现推演"
-  short_description: "先理解真实意图，再给出深度恰当且适度组织化的方案与路径"
-  default_prompt: "使用 $goal-orchestrator，先判断我真正需要的交付物；方案应与复杂度和用途匹配并保持专业深度，组织只在确有价值时适度展开。"
+  short_description: "把一句目标主动理解成可规划意图，形成专业完整的方案、推演与实施指南"
+  default_prompt: "使用 $goal-orchestrator，从我的自然表达主动形成可规划目标；能合理假设时直接给出有指南价值的方案、规划与情景推演，不要把交付物分类或问卷抛给我，组织只在确有价值时展开。"

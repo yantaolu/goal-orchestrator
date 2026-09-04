@@ -28,6 +28,16 @@ SOLUTION_DEPTHS = (
     "standard",
     "deep",
 )
+PLANNING_DEPTHS = (
+    "light",
+    "standard",
+    "deep",
+)
+SIMULATION_DEPTHS = (
+    "none",
+    "light",
+    "structured",
+)
 SOLUTION_STATUSES = (
     "to_design",
     "partially_defined",
@@ -108,7 +118,9 @@ REQUIRED_FILES = (
     "agents/openai.yaml",
     "assets/orchestration-report-template.md",
     "evals/evals.json",
+    "evals/trigger-evals.json",
     "references/examples.md",
+    "references/goal-planning-protocol.md",
     "references/output-contracts.md",
     "references/role-schema.md",
     "references/role.schema.json",
@@ -123,6 +135,13 @@ EXPECTED_EVAL_SCENARIOS = {
     4: ("游泳", "三个月", "四百米"),
     5: ("完整团队", "糖尿病", "用药提醒"),
     6: ("Electron", "Tauri", "明确推荐"),
+    9: ("2000", "事业部"),
+    10: ("2000", "事业部", "不要实施计划"),
+    11: ("重大客诉", "销售", "交付", "产品"),
+    12: ("老人", "诈骗", "App"),
+    13: ("咖啡店", "三个月", "增长"),
+    14: ("考试", "没告诉"),
+    15: ("2000", "员工数据", "导入"),
 }
 DEPTH_EVALS = {
     "concise": (7, "简要"),
@@ -212,35 +231,48 @@ def check_skill(root: Path, results: Results) -> None:
     description = fields.get("description", "")
     if re.search(r"[A-Za-z]", description):
         results.fail("SKILL.md frontmatter description must be entirely Chinese and contain no Latin letters")
-    for phrase in ("先理解", "具体方案", "目标", "既有方案", "问题复杂度", "模拟团队", "不替代真实执行"):
+    for phrase in ("一句", "主动理解", "可规划意图", "具体方案", "目标规划", "问题复杂度", "模拟团队", "不替代真实执行", "普通事实问答", "数据导入"):
         if phrase not in description:
-            results.fail(f"SKILL.md description is missing adaptive-routing phrase {phrase!r}")
+            results.fail(f"SKILL.md description is missing intent-and-trigger phrase {phrase!r}")
 
     if len(text.splitlines()) >= 500:
         results.fail("SKILL.md must remain under 500 lines")
-    for concept in (*REQUEST_MODES, *SOLUTION_STATUSES, *SOLUTION_DEPTHS, *IMPLEMENTATION_DEPTHS, *ORGANIZATION_DEPTHS):
+    for concept in (
+        *REQUEST_MODES,
+        *SOLUTION_STATUSES,
+        *SOLUTION_DEPTHS,
+        *PLANNING_DEPTHS,
+        *SIMULATION_DEPTHS,
+        *IMPLEMENTATION_DEPTHS,
+        *ORGANIZATION_DEPTHS,
+    ):
         if concept not in text:
             results.fail(f"SKILL.md is missing routing concept {concept!r}")
     for concept in (
-        "先判断用户要什么",
+        "先构造可规划意图",
+        "再判断交付意图",
+        "Goal Brief",
+        "默认下限",
+        "短输入不是低复杂度",
+        "规模、涉及人员与利益相关者、组织层级、系统耦合、风险、时间跨度、可逆性和持续运营复杂度",
+        "推演是对目标、路径或运行机制的前向模拟",
+        "风险清单",
+        "分清三种组织概念",
         "请求类型不直接决定是否需要组织",
-        "未选择 `simulated_team` 时，不创建 `R0`",
+        "未选择 `simulated_team` 时，不创建 `R0`，不补完整角色表，也不意味着不做目标或场景推演",
         "自然表达不等于简略",
-        "普通“给我一份方案”一律按 `standard` 处理",
-        "方案完整度门槛",
-        "普通回答直接按下列原则处理；`deep` 方案、正式可行性判断、复杂呈现或结构化交接时，再读取",
-        "边界提示不是每次回答的固定开场",
-        'schema_version: "3.2"',
+        "普通“给我一份方案”的默认值",
+        "边界提示不是固定开场",
+        'schema_version: "3.3"',
         'schema_version: "3.0"',
-        "plan-viable",
-        "conditionally-viable",
-        "not-yet-viable",
+        "目标规划的信息价值门",
     ):
         if concept not in text:
             results.fail(f"SKILL.md is missing adaptive invariant {concept!r}")
 
     required_links = (
         "references/output-contracts.md",
+        "references/goal-planning-protocol.md",
         "references/role-schema.md",
         "references/role.schema.json",
         "references/simulation-protocol.md",
@@ -252,7 +284,7 @@ def check_skill(root: Path, results: Results) -> None:
             results.fail(f"SKILL.md must link to {relative}")
 
     if len(results.errors) == start_errors:
-        results.passed("SKILL.md has Chinese discovery metadata and adaptive intent-first routing")
+        results.passed("SKILL.md has Chinese discovery metadata plus intent construction, planning, and simulation routing")
 
 
 def extract_yaml_value(text: str, key: str) -> str | None:
@@ -274,17 +306,20 @@ def check_openai_yaml(root: Path, results: Results) -> None:
     if short_description and (
         "理解" not in short_description
         or "方案" not in short_description
-        or not any(phrase in short_description for phrase in ("深度恰当", "专业完整", "深度匹配"))
+        or "可规划意图" not in short_description
+        or "专业完整" not in short_description
     ):
         results.fail("agents/openai.yaml short_description must reflect intent-first delivery with adaptive depth")
     if default_prompt is None or "$" + SKILL_NAME not in default_prompt:
         results.fail("agents/openai.yaml default_prompt must mention $" + SKILL_NAME)
     if default_prompt and (
-        "先判断" not in default_prompt
-        or "专业深度" not in default_prompt
+        "自然表达" not in default_prompt
+        or "可规划目标" not in default_prompt
+        or "直接给出" not in default_prompt
+        or "交付物分类或问卷" not in default_prompt
         or "组织只在" not in default_prompt
     ):
-        results.fail("agents/openai.yaml default_prompt must separate professional depth from organization restraint")
+        results.fail("agents/openai.yaml default_prompt must drive intent construction before routing without a questionnaire")
     if len(results.errors) == start_errors:
         results.passed("agents/openai.yaml exposes the adaptive Chinese interface")
 
@@ -421,7 +456,7 @@ def check_role_contract(root: Path, results: Results) -> None:
     for key in DECISION_RIGHT_KEYS:
         if f"- `{key}`：" not in role_doc:
             results.fail(f"role-schema.md does not document decision_rights key {key!r}")
-    for concept in ("只在组织深度为 `simulated_team` 时读取", "不创建这里定义的角色对象或 `R0`", "根结构化输出升级到 3.2 不改变角色契约"):
+    for concept in ("只在组织深度为 `simulated_team` 时读取", "不创建这里定义的角色对象或 `R0`", "根结构化输出升级到 3.3 不改变角色契约", "真实组织方案，本身不触发本角色协议"):
         if concept not in role_doc:
             results.fail(f"role-schema.md is missing conditional-use concept {concept!r}")
 
@@ -479,6 +514,7 @@ def check_adaptive_contracts(root: Path, results: Results) -> None:
         "README.md",
         "assets/orchestration-report-template.md",
         "references/output-contracts.md",
+        "references/goal-planning-protocol.md",
         "references/examples.md",
         "references/simulation-protocol.md",
     )
@@ -498,6 +534,12 @@ def check_adaptive_contracts(root: Path, results: Results) -> None:
         for depth in SOLUTION_DEPTHS:
             if depth not in text:
                 results.fail(f"{relative} is missing solution depth {depth!r}")
+        for depth in PLANNING_DEPTHS:
+            if depth not in text:
+                results.fail(f"{relative} is missing planning depth {depth!r}")
+        for depth in SIMULATION_DEPTHS:
+            if depth not in text:
+                results.fail(f"{relative} is missing simulation depth {depth!r}")
         for depth in ORGANIZATION_DEPTHS:
             if depth not in text:
                 results.fail(f"{relative} is missing organization depth {depth!r}")
@@ -507,13 +549,18 @@ def check_adaptive_contracts(root: Path, results: Results) -> None:
         if label not in contracts:
             results.fail(f"references/output-contracts.md is missing evidence label {label}")
     for phrase in (
-        'schema_version: "3.2"',
+        'schema_version: "3.3"',
         'schema_version: "3.0"',
         "普通技术方案、架构比较和简单个人计划不需要固定边界开场",
         "两三步的简单计划直接写出来",
         "仅在用户询问可行性",
         "普通“给我一份方案”的默认值",
         "实施或组织从轻时，应把篇幅保留给用户要的方案",
+        "先形成暂定 Goal Brief，再判断交付模式",
+        "只有未知会导致完全不同路线、重大不可逆成本或安全、法律、资金风险时，才先问一个问题",
+        "`planning_depth`",
+        "`simulation_depth` 与 `organization_depth` 独立",
+        "风险清单不是推演",
     ):
         if phrase not in contracts:
             results.fail(f"references/output-contracts.md is missing conditional output rule {phrase!r}")
@@ -525,13 +572,20 @@ def check_adaptive_contracts(root: Path, results: Results) -> None:
         "方案模块",
         "深入方案扩展模块（按需）",
         "既有方案实施模块",
+        "目标实现模块",
+        "情景推演带来的修订",
         "完整模拟组织模块（严格按需）",
     ):
         if phrase not in template:
             results.fail(f"report template is missing modular-output phrase {phrase!r}")
 
+    planning_protocol = texts["references/goal-planning-protocol.md"]
+    for phrase in ("用于所有 `goal_realization` 请求", "默认先交付再校准", "短输入", "目标状态和运营模型", "向前推演代表性场景", "将发现变成方案修订", "现实第一步"):
+        if phrase not in planning_protocol:
+            results.fail(f"goal-planning-protocol.md is missing planning invariant {phrase!r}")
+
     protocol = texts["references/simulation-protocol.md"]
-    for phrase in ("仅当组织深度为 `simulated_team` 时使用", "普通方案、架构比较、简单目标和责任映射不执行本协议", "方案或实施重点应先出现"):
+    for phrase in ("仅当组织深度为 `simulated_team` 时使用", "不是目标规划与情景推演的全部协议", "没有选择 `simulated_team` 时不执行本协作协议", "方案或实施重点应先出现"):
         if phrase not in protocol:
             results.fail(f"simulation-protocol.md is missing adaptive boundary {phrase!r}")
 
@@ -560,6 +614,14 @@ def check_adaptive_contracts(root: Path, results: Results) -> None:
             "设计者",
             "实现者",
         ),
+        "intent construction and scenario revision": (
+            "可规划意图",
+            "planning_depth",
+            "simulation_depth",
+            "风险清单",
+            "具体修订",
+            "现实第一步",
+        ),
     }
     invariant_sources = {
         "comparison prototype discipline": (
@@ -582,6 +644,11 @@ def check_adaptive_contracts(root: Path, results: Results) -> None:
             "references/examples.md",
             "assets/orchestration-report-template.md",
         ),
+        "intent construction and scenario revision": (
+            "SKILL.md",
+            "references/goal-planning-protocol.md",
+            "references/output-contracts.md",
+        ),
     }
     for invariant, phrases in invariant_phrases.items():
         for relative in invariant_sources[invariant]:
@@ -595,7 +662,7 @@ def check_adaptive_contracts(root: Path, results: Results) -> None:
                 )
 
     if len(results.errors) == start_errors:
-        results.passed("cross-file contracts preserve adaptive routing, concise closure, comparison discipline, and independent validation")
+        results.passed("cross-file contracts preserve intent-first planning, scenario revision, adaptive routing, concise closure, comparison discipline, and independent validation")
 
 
 def check_evals(root: Path, results: Results) -> None:
@@ -612,8 +679,8 @@ def check_evals(root: Path, results: Results) -> None:
     if not isinstance(evals, list):
         results.fail("evals/evals.json evals must be an array")
         return
-    if len(evals) < 6:
-        results.fail("evals/evals.json must contain at least six realistic routing and depth scenarios")
+    if len(evals) < 15:
+        results.fail("evals/evals.json must retain the original eight cases and add at least seven planning/trigger-boundary scenarios")
 
     seen_ids: set[int] = set()
     expected_fields = {"id", "prompt", "expected_output", "files", "expectations"}
@@ -701,8 +768,70 @@ def check_evals(root: Path, results: Results) -> None:
         if not any(isinstance(expectation, str) and phrase in expectation for expectation in concise_expectations):
             results.fail(f"concise eval must cover closure without bloat: {phrase!r}")
 
+    planning_eval_requirements = {
+        9: ("不以前置问卷", "深度规划", "阶段成果", "代表性场景", "具体方案修订", "真实组织", "现实第一步"),
+        10: ("组织划分", "管理跨度", "真实组织", "不要实施计划", "完整虚拟"),
+        11: ("决策链", "具体缺口", "修改", "真实组织运行推演", "不需要创建完整模拟团队"),
+        12: ("暂定受益者", "产品方案", "阶段成果", "推演", "修改产品或权限方案"),
+        13: ("稳定增长的暂定定义", "领域机制", "判断门", "失败路线", "修改增长指标或促销规则"),
+        14: ("一个", "完全不同", "不得连续询问", "不得",),
+        15: ("数据导入操作", "不因为出现 2000 条", "不得展开产品方案", "不得创建模拟团队"),
+    }
+    for eval_id, required_phrases in planning_eval_requirements.items():
+        expectations = cases_by_id.get(eval_id, {}).get("expectations", [])
+        joined = "\n".join(item for item in expectations if isinstance(item, str))
+        for phrase in required_phrases:
+            if phrase not in joined:
+                results.fail(f"planning eval {eval_id} must cover {phrase!r}")
+
     if len(results.errors) == start_errors:
-        results.passed("canonical behavior evals cover adaptive routing plus concise, standard, and deep solution depth")
+        results.passed("canonical behavior evals cover adaptive routing, all solution depths, intent construction, goal planning, scenario revision, and near-neighbor boundaries")
+
+
+def check_trigger_evals(root: Path, results: Results) -> None:
+    cases = load_json(root / "evals/trigger-evals.json", results)
+    start_errors = len(results.errors)
+
+    if not isinstance(cases, list):
+        results.fail("trigger-evals.json must use the Skill Creator top-level JSON array format")
+        return
+    if not 18 <= len(cases) <= 24:
+        results.fail("trigger-evals.json should contain approximately twenty cases")
+
+    expected_fields = {"query", "should_trigger"}
+    positive_prompts: list[str] = []
+    negative_prompts: list[str] = []
+    for index, case in enumerate(cases):
+        location = f"trigger-evals.json[{index}]"
+        if not isinstance(case, dict) or set(case) != expected_fields:
+            results.fail(f"{location} must contain exactly {sorted(expected_fields)!r}")
+            continue
+        prompt = case.get("query")
+        should_trigger = case.get("should_trigger")
+        if not isinstance(prompt, str) or not prompt.strip():
+            results.fail(f"{location} query must be a non-empty string")
+        elif "$goal-orchestrator" in prompt:
+            results.fail(f"{location} must test natural triggering without an explicit skill mention")
+        if not isinstance(should_trigger, bool):
+            results.fail(f"{location} should_trigger must be boolean")
+        elif isinstance(prompt, str):
+            (positive_prompts if should_trigger else negative_prompts).append(prompt)
+
+    if not 8 <= len(positive_prompts) <= 12 or not 8 <= len(negative_prompts) <= 12:
+        results.fail("trigger-evals.json must include 8-12 positive and 8-12 negative cases")
+
+    positive_text = "\n".join(positive_prompts)
+    for phrase in ("我要", "我想", "我的目标是", "事业部", "咖啡店", "App", "组织变革", "游泳", "技术方案", "已经定了"):
+        if phrase not in positive_text:
+            results.fail(f"positive trigger cases are missing coverage marker {phrase!r}")
+
+    negative_text = "\n".join(negative_prompts)
+    for phrase in ("2000 条员工数据", "字段改名", "首都", "单元测试", "翻译", "天气", "迁移脚本", "邮件", "Excel", "报错"):
+        if phrase not in negative_text:
+            results.fail(f"negative trigger cases are missing near-neighbor marker {phrase!r}")
+
+    if len(results.errors) == start_errors:
+        results.passed("Skill Creator trigger evals use the standard array format with balanced goal/solution positives and execution/fact negatives")
 
 
 def check_relative_links(root: Path, results: Results) -> None:
@@ -779,6 +908,7 @@ def main() -> int:
     check_mermaid(root, results)
     check_adaptive_contracts(root, results)
     check_evals(root, results)
+    check_trigger_evals(root, results)
     check_relative_links(root, results)
     check_reference_structure(root, results)
     check_empty_files(root, results)
