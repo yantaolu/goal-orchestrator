@@ -1,340 +1,285 @@
-# Output Contracts
+# 输出契约
 
-Use two output layers so a non-expert receives a useful implementation guide while structured traceability remains available for handoff, audit, or later execution.
+输出的首要标准是符合用户真实意图、内容具体、表达自然。内部路由、证据记录和组织协议用于提高质量，不应自动变成用户必须阅读的章节。
 
-## Contents
+## 目录
 
-1. [Positioning and priority](#positioning-and-priority)
-2. [Frontstage user contract](#frontstage-user-contract)
-3. [Mermaid contract](#mermaid-contract)
-4. [Backstage structured contract](#backstage-structured-contract)
-5. [Evidence model](#evidence-model)
-6. [Entity records](#entity-records)
-7. [Final response sequence](#final-response-sequence)
-8. [Compact and structured modes](#compact-and-structured-modes)
+1. [优先级](#优先级)
+2. [意图匹配](#意图匹配)
+3. [方案深度与完整度](#方案深度与完整度)
+4. [自然表达契约](#自然表达契约)
+5. [条件式内容](#条件式内容)
+6. [证据模型](#证据模型)
+7. [结构化契约](#结构化契约)
+8. [按场景组织内容](#按场景组织内容)
+9. [提交前检查](#提交前检查)
 
-## Positioning and priority
+## 优先级
 
-The Chinese positioning is:
+当要求相互竞争时，按以下顺序决定：
 
-> 目标实现推演——把一个简单目标转化为经过模拟验证、可用于现实执行的方案。
+1. 忠实理解并回答用户真正的问题。
+2. 给出领域具体、可判断和可使用的方案内容。
+3. 保持事实、假设、方案审查和现实证据之间的边界。
+4. 提供与请求、复杂度和用途相称的方案深度。
+5. 提供与请求相称、且不侵占方案主体的实施深度。
+6. 仅在能够增加价值时引入责任、完整组织、可行性门和可视化。
+7. 保留必要的追溯信息，但默认不打断阅读。
 
-Simulation is the method. The primary deliverable is a plan-level feasibility-checked implementation guide. Real execution remains outside the Skill.
+不要为满足格式牺牲前两项。缺少一个固定标题不是问题；用角色名单代替用户索要的技术方案才是问题。
 
-When presentation goals compete, use this priority:
+## 意图匹配
 
-1. Truthful simulation and evidence boundary.
-2. Clear recommendation and defensible feasibility verdict.
-3. Plain-language comprehension.
-4. Complete applicable lifecycle and role ownership.
-5. Visual workflow clarity.
-6. Structured traceability.
+### 方案设计
 
-## Frontstage user contract
+当用户明确要求技术方案、产品方案、业务方案、架构设计、选型或方案比较时：
 
-Write for a capable non-expert who understands the desired result but may not know the domain, roles, methods, vocabulary, or sequence.
+- 第一段直接给推荐方向或核心判断。
+- 主体用于目标边界、设计、模块、数据、接口、流程、规则、选型取舍和风险。
+- 只给影响方案成立的实施提示；除非用户要求，不扩写完整落地计划。
+- 组织深度默认 `none`，不能因为方案复杂就自动展示一支团队。
+- 默认按 `standard` 深度交付；没有团队、排期或图示不构成缩短领域方案的理由。
 
-### Boundary notice
+### 目标实现
 
-Begin with one short localized statement that communicates:
+当用户只描述想实现的结果时：
 
-- The plan was developed through simulated collaboration and plan-level validation.
-- It is intended to guide later real implementation.
-- No real action was performed and named reality checks remain outstanding.
+- 先形成一个有实质内容的产品、技术、业务或方法方案。
+- 再说明怎样实施，包括必要阶段、依赖、产出、验收和风险。
+- 简单个人目标可以直接给自然步骤；复杂目标才需要流程、责任或完整组织。
+- 不要让实施流程挤掉方案本身。
 
-Preferred Chinese wording:
+### 既有方案实施
 
-> 以下方案通过模拟协作和方案级验证形成，可作为现实实施指南；尚未执行任何现实操作，标注的现实验证事项仍需完成。
+当用户已经给出方案、技术栈、架构、范围或关键决定并要求落地时：
 
-Use the notice once. Do not attach “模拟” or “虚拟” to every role, artifact, stage, or sentence after the boundary is clear.
+- 先确认实施基线和交付目标。
+- 主体用于拆分、顺序、依赖、责任、质量门、发布、运行、反馈和回退。
+- 不重新比较已经确定的选型，除非发现会阻断实施的冲突或重大风险。
+- 若建议修改既有决定，明确说明理由、影响和最小修改范围。
 
-### Language rules
+这些模式是内部路由。除非用户要求解释方法，不显示标签。
 
-- Lead with what the user should do and the current feasibility verdict, not the internal method.
-- Use normal professional titles such as “开发工程师,” “测试负责人,” and “运营负责人.”
-- Translate technical terms or explain them on first use.
-- Prefer “负责把 RAW 文件转换为可编辑图像” over “owns CAP4 and ART7.”
-- Describe review evidence naturally: “方案审查发现导出流程缺少损坏文件处理,” not “测试已经证明应用正常.”
-- Describe future real actions in future or conditional language; never turn a simulated event into past real progress.
-- State whether the result is `方案级可行`, `有条件可行`, or `暂不具备可行性`, and explain why in ordinary language.
-- Explain assumptions next to the conclusion they affect.
-- End with one to three high-leverage decisions or first actions; do not hand the user a disguised questionnaire.
-- Use the user's language and localized headings.
+## 方案深度与完整度
 
-### Progressive disclosure
+`solution_status` 说明已有设计的状态：`to_design` 表示从零设计，`partially_defined` 表示在用户给出的方向上补足关键设计，`fixed` 表示把既定方案作为实施基线。它不表示答案长短。
 
-Keep these backstage by default:
+`solution_depth` 单独控制本次交付的方案纵深：
 
-- IDs such as `SG2`, `CAP4`, `R3`, `ART5`, and `EV6`.
-- Raw evidence labels on every claim.
-- Full role contracts and coverage matrices.
-- Artifact registries and event ledgers.
-- JSON or YAML.
+- `concise`：仅用于用户明确要求概要、快速建议、简要判断或一页结论。保留推荐、关键理由和最重要的条件。
+- `standard`：普通“给我一份方案”的默认值。提供足以讨论、选择和评审的完整领域方案；不能只列方向、名词或结论。
+- `deep`：用户明确要求详细、完整、可落地、评审级、交付级，或问题复杂、高风险、跨系统且约束很多时使用。提供可供后续设计和拆解的机制细节。
 
-Expose them when:
+`standard` 方案按问题相关性覆盖以下完整度门槛：
 
-- The user requests structured or auditable data.
-- The result will be handed to another system or professional team.
-- A label prevents plan-level validation from being mistaken for real evidence.
-- A dependency or coverage gap cannot be explained clearly without it.
+1. 推荐及目标边界。
+2. 核心模块和职责。
+3. 数据流、控制流或业务流如何运作。
+4. 关键取舍、代价和不适用条件。
+5. 失败、异常或主要风险的处理方式。
+6. 验证方法、通过标准或切换条件。
 
-## Mermaid contract
+`deep` 在此基础上，按实际问题展开接口契约、数据模型、状态与一致性、安全与隐私、性能与容量、兼容性、可观测性、运维或验收门。自然表达允许合并或省略不相关标题，但不能省掉支撑理解、判断、评审和后续设计的机制。
 
-Use Mermaid whenever the result contains:
+`implementation_depth` 也独立选择：`none` 表示无需实施提示，`light` 只保留会影响方案成立的依赖、原型或验证顺序，`detailed` 才展开阶段、责任、发布和回退。实施或组织从轻时，应把篇幅保留给用户要的方案，而不是把整份答案变短。
 
-- Three or more dependent steps.
-- Parallel work that later converges.
-- Role-to-role handoffs.
-- Review, rejection, revision, escalation, or a stop/go gate.
-- An organization or decision structure with three or more relationships.
+## 自然表达契约
 
-Choose the smallest useful diagram:
+- 使用用户的语言、领域词汇和理解层级。
+- 先给答案，再解释方法或过程。
+- 标题描述实际内容，例如“推荐架构”“十二周落地计划”，不要固定使用“我理解的目标”“方案怎样经过审查”。
+- 把假设放在它影响的结论旁，不要集中生成冗长的假设登记表。
+- 用具体内容代替管理套话。例如说明同步冲突怎样合并，而不是只写“建立数据能力”。
+- 不展示 `request_mode`、`organization_depth`、`SG2`、`CAP4`、`R3`、`ART5`、`EV6` 等内部字段，除非用户要求结构化输出或专业交接需要。
+- 不为显得完整而添加空洞的团队、风险、现实验证、决策或附录章节。
+- 不为显得自然而删去决定推荐是否成立的机制、边界、取舍、异常或验证。
+- 结尾只给真正有杠杆的下一步；答案已经完整时无需制造问题让用户回答。
 
-- `flowchart LR` or `flowchart TD` for implementation paths, branches, phases, and lifecycle flow.
-- `sequenceDiagram` for handoffs and rework.
-- `stateDiagram-v2` only when artifact or decision state is the main point.
+## 条件式内容
 
-Example:
+### 边界说明
+
+边界说明仅在下列情况出现：
+
+- 使用了完整模拟组织或模拟审查。
+- 用户要求现实开发、测试、部署、联系、交易或运营，但当前没有执行。
+- 方案层判断容易被误解为已经取得现实结果。
+
+自然说明一次即可。例如：
+
+> 以下组织协作与审查属于方案推演，尚未执行现实开发、测试或发布；相关结论仍需按文中的验证条件确认。
+
+普通技术方案、架构比较和简单个人计划不需要固定边界开场。
+
+### 正式可行性结论
+
+仅在用户询问可行性、复杂目标需要质量门，或关键条件决定能否推荐时，给出一个正式状态：
+
+- `plan-viable` / 方案级可行：在已知事实和明确假设下，没有已知的方案级阻碍；现实检查仍可能需要完成。
+- `conditionally-viable` / 有条件可行：路径基本成立，但依赖明确的证据、资源、审批、集成或测试。
+- `not-yet-viable` / 暂不具备可行性：已知阻碍、矛盾或不可接受风险使当前路径不能被负责地推荐。
+
+状态后紧接依据。不要在普通方案上机械贴标签，也不要把 `plan-viable` 翻译成“现实中已证明可行”。
+
+### Mermaid
+
+仅在图比短段落或列表更清楚时使用 Mermaid，常见条件是：
+
+- 三步以上存在明确依赖。
+- 并行工作稍后汇合。
+- 多方交接、返工或升级。
+- 分支和停止或继续的决策门。
+- 三个以上节点间的结构关系难以线性说明。
 
 ```mermaid
 flowchart TD
-    A["明确目标和成功标准"] --> B["形成候选实施方案"]
-    B --> C["专业角色补全实施细节"]
-    C --> D["独立审查与压力测试"]
-    D --> E{"方案级验证通过？"}
-    E -- "否" --> B
-    E -- "有条件" --> F["记录前提和现实验证门"]
-    E -- "是" --> G["形成现实实施指南"]
-    F --> G
+    A["冻结目标和关键约束"] --> B1["设计核心方案"]
+    A --> B2["准备验证条件"]
+    B1 --> C["整合最小可用成果"]
+    B2 --> C
+    C --> D{"关键标准是否达到？"}
+    D -- "否" --> B1
+    D -- "是" --> E["进入交付或扩展"]
 ```
 
-Rendering rules:
+渲染规则：
 
-- Use a fenced block beginning with exactly ```mermaid`.
-- Put the diagram type on the first non-empty line.
-- Quote labels containing spaces, punctuation, parentheses, or non-ASCII text.
-- Give every node a stable local alias.
-- Prefer syntax supported by common Mermaid renderers.
-- Avoid raw HTML, Markdown links, custom JavaScript, initialization directives, and experimental syntax.
-- Split diagrams beyond roughly 12–15 nodes or when scanning becomes difficult.
-- Explain the takeaway in one short paragraph after the diagram.
+- Mermaid 围栏的语言标记必须是 `mermaid`。
+- 第一行使用 `flowchart LR`、`flowchart TD`、`sequenceDiagram` 或 `stateDiagram-v2`。
+- 包含中文、空格、标点或括号的标签使用引号。
+- 避免原始超文本、自定义脚本、初始化指令和实验语法。
+- 图超过约十二到十五个节点或难以扫描时拆分。
 
-Tables remain appropriate for compact comparisons, exact mappings, or structured appendices. A table must not be the sole representation of a multi-stage path or handoff loop.
+两三步的简单计划直接写出来，不要为了“完整”添加图。
 
-## Backstage structured contract
+### 团队与责任
 
-Maintain these root properties when structured data is emitted:
+- `none`：不显示团队或责任章节。
+- `responsibility_map`：仅说明实施所需的责任、交付、下游和验收，不生成角色档案、角色剧情或 `R0`。
+- `simulated_team`：方案或实施路径在前，完整组织在后。角色使用正常专业名称；`R0` 只协调，不补位。仅展示改变结论的审查和返工。
+
+### 现实检查
+
+只列出会决定方案选择、进入下一阶段、发布或停止的现实检查。每项最好说明验证方法、通过标准和失败路线。无需罗列“持续关注风险”等常识。
+
+## 证据模型
+
+后台对重要主张保留以下分类：
+
+| 标签 | 含义 |
+|---|---|
+| `USER_FACT` | 用户明确提供、但未被独立核验的信息 |
+| `ASSUMPTION` | 为了形成或比较路径而引入的假设 |
+| `DERIVED` | 能从已标注输入透明推导出的结论 |
+| `SIMULATED` | 只在方案推演或模拟审查中产生的发现 |
+| `UNKNOWN` | 对结论重要、但当前缺少的信息 |
+
+如果当前工作流通过工具取得了只读资料、代码检查或其他证据，准确注明来源和范围；不要把它错误归类为模拟。任何标签都不能因重复出现而升级为现实事实。
+
+前台用自然语言表达：
+
+- `ASSUMPTION`：“如果首版只面向单设备使用，那么……”
+- `SIMULATED`：“方案审查发现离线写入和云端覆盖之间缺少冲突规则。”
+- `UNKNOWN`：“进入开发前，需要用目标设备确认内存预算。”
+
+不应在每句话后显示证据标签。
+
+## 结构化契约
+
+只在用户要求、系统交接或审计需要时输出。根对象使用 `schema_version: "3.2"`：
 
 ```yaml
-schema_version: "3.0"
-positioning_zh: "目标实现推演"
-tagline_zh: "把一个简单目标转化为经过模拟验证、可用于现实执行的方案"
+schema_version: "3.2"
+request_mode: "<solution_design | goal_realization | implementation_orchestration>"
+solution_status: "<to_design | partially_defined | fixed>"
+solution_depth: "<concise | standard | deep>"
+implementation_depth: "<none | light | detailed>"
+organization_depth: "<none | responsibility_map | simulated_team>"
+deliverable_type: "<solution | solution_and_implementation | implementation_plan>"
+user_language: "<语言>"
+goal: {}
+solution: {}
+implementation: {}
+evidence:
+  user_facts: []
+  assumptions: []
+  derived_findings: []
+  simulated_findings: []
+  unknowns: []
+external_actions_performed: []
+simulation: null
+```
+
+字段约束：
+
+- `solution_status` 表示已有方案的状态，不能用来表达方案深度；已有方案实施通常为 `fixed`。
+- `solution_depth` 根据交付用途选择 `concise`、`standard` 或 `deep`；普通方案请求默认 `standard`，明确压缩才使用 `concise`。
+- `implementation_depth` 根据用户请求和复杂度选择 `none`、`light` 或 `detailed`，与方案深度独立。
+- `external_actions_performed` 必须准确记录真实发生的动作；若没有则为空数组，不能根据方案内容虚构。
+- `simulation` 只在 `organization_depth: simulated_team` 时使用；其他情况保持 `null` 或省略。
+
+完整模拟组织可以在 `simulation` 中增加：
+
+```yaml
 execution_mode: simulation
 simulation_only: true
-deliverable_type: implementation_guide
-external_actions_performed: []
-user_language: "<language>"
-goal: {}
-lifecycle: []
-subgoals: []
-capabilities: []
 roles: []
 artifacts: []
-workflow: []
 events: []
-coverage: {}
-feasibility_assessment: {}
-implementation_guide: {}
+feasibility_assessment:
+  status: "<plan-viable | conditionally-viable | not-yet-viable>"
+  scope: "plan-level"
 reality_checks_required: []
 ```
 
-Use stable internal identifiers:
+根契约 3.2 不改变角色契约。`roles` 中每个角色仍须符合 [role.schema.json](role.schema.json)，并使用 `schema_version: "3.0"`。
 
-| Entity | Pattern |
-|---|---|
-| Root goal | `G0` |
-| Subgoal | `SG<n>` |
-| Capability | `CAP<n>` |
-| Role | `R<n>`, with `R0` reserved for the Orchestrator |
-| Artifact | `ART<n>` |
-| Workflow phase | `WF<n>` |
-| Simulation event | `EV<n>` |
-| Assumption | `A<n>` |
-| Unknown | `U<n>` |
-| Risk | `RSK<n>` |
-| Decision | `D<n>` |
-| Reality check | `RC<n>` |
+## 按场景组织内容
 
-Never renumber an entity during replanning. Retain replaced records as `superseded`.
+以下是可选内容顺序，不是固定标题：
 
-Use these statuses where applicable:
+### 方案请求
 
-- `planned`
-- `active`
-- `blocked`
-- `plan-reviewed`
-- `accepted`
-- `conditionally-accepted`
-- `rejected`
-- `superseded`
+1. 推荐方向、目标边界和适用前提。
+2. 核心模块，以及数据、控制或业务机制。
+3. 关键取舍、不适用条件和异常路径。
+4. 真正重要的风险、验证和切换条件。
+5. 按需补充 `light` 实施提示；只有用户要求时才给完整落地计划。
 
-## Evidence model
+当深度为 `deep` 时，继续加入相关接口契约、数据模型、状态、安全、性能、兼容、可观测性或验收门；不能以没有组织为理由降回概要。
 
-Classify every material backstage claim:
+### 目标请求
 
-| Label | Meaning |
-|---|---|
-| `USER_FACT` | Explicitly supplied by the user and not independently verified |
-| `ASSUMPTION` | Introduced so a path can be evaluated |
-| `DERIVED` | Follows transparently from labeled inputs |
-| `SIMULATED` | Produced or observed only inside the plan simulation |
-| `UNKNOWN` | Important information that is unavailable |
+1. 对目标的简短理解和必要假设。
+2. 有实质内容的推荐方案。
+3. 与复杂度匹配的实施路径。
+4. 必要责任、条件、风险和下一步。
 
-Never promote an assumption because several roles repeated it. A simulation event never creates real-world evidence.
+### 既有方案实施请求
 
-Translate labels naturally in the frontstage layer:
+1. 已确定的实施基线。
+2. 阶段、依赖、产出和验收。
+3. 必要责任、交接和质量门。
+4. 发布、运行、反馈与回退。
+5. 会阻断实施的局部方案问题。
 
-- `ASSUMPTION`: “为了继续形成方案，我暂时按……处理。”
-- `SIMULATED`: “在方案审查中，这个路径被指出……”
-- `UNKNOWN`: “真正开始前还需要确认……”
+### 明确要求团队推演
 
-Show raw labels only when the distinction itself matters.
+1. 仍然先给实质方案或实施重点。
+2. 一次边界说明。
+3. 完整责任组织和关键交接。
+4. 影响建议的审查、退回与修订。
+5. 正式方案级可行性判断和现实检查。
 
-## Entity records
+## 提交前检查
 
-### Goal brief
-
-Record:
-
-- `goal_id` and original wording.
-- Plain-language target outcome and beneficiary.
-- Horizon, constraints, resources, stakeholders, and exclusions.
-- Definition of done.
-- Assumption and unknown references.
-- Execution boundary and current confidence.
-
-### Lifecycle record
-
-Create one record for every canonical stage:
-
-- `stage`: `understand`, `plan`, `design`, `produce`, `validate`, `integrate`, `deliver`, `operate`, or `learn`.
-- `applicability`: `applicable`, `not_applicable`, or `deferred`.
-- `reason`.
-- `accountable_role_ids`.
-- `expected_artifact_ids`.
-- `reality_check_ids`.
-
-A stage cannot be marked `not_applicable` merely because external execution is forbidden.
-
-### Subgoal record
-
-Record `subgoal_id`, observable outcome, parent, rationale, dependencies, constraints, completion evidence, lifecycle stages, implementation-guide phases, and status.
-
-### Capability record
-
-Record `capability_id`, name, purpose, subgoals, lifecycle stages, required depth, inputs, simulation limit, accountable role, and reality evidence needed.
-
-### Artifact record
-
-Record:
-
-- Artifact ID, name, producer, consumers, lifecycle stage, and contribution mode.
-- Source IDs and a concise content summary.
-- Acceptance criteria and independent validator where required.
-- Evidence labels, status, and `created_in_simulation: true`.
-- Reality checks that remain unperformed.
-
-If an artifact is rejected, preserve it and create a revision. Do not rewrite history.
-
-### Workflow record
-
-Record phase ID, outcome-oriented name, entry conditions, active roles, simulation activities, artifacts, exit gate, rejection route, and linked implementation-guide phase. Render the visible path with Mermaid.
-
-### Event record
-
-Log only material events:
-
-- Actor and bounded simulation action.
-- Consumed and produced artifacts.
-- Contribution mode: `coordinate`, `decide`, `design`, `produce`, `validate`, `integrate`, `deliver`, `operate`, or `challenge`.
-- Findings, decisions, issues, state change, and status.
-- Real action explicitly not performed when confusion is plausible.
-
-Use event order, not fictional timestamps.
-
-### Feasibility assessment
-
-Record:
-
-- `status`: `plan-viable`, `conditionally-viable`, or `not-yet-viable`.
-- `scope`: always `plan-level`.
-- Assessed dimensions and their evidence.
-- Supporting findings and failed checks.
-- Conditions, blockers, confidence, and sensitivity to assumptions.
-- Reality checks required to replace remaining uncertainty.
-
-`plan-viable` means no known plan-level blocker remains under stated facts and assumptions. It never means the result has been proven in reality.
-
-### Implementation guide
-
-Record:
-
-- Recommended path and rationale.
-- Ordered phases with owners, prerequisites, proposed real actions, expected outputs, and acceptance gates.
-- Decision points, fallback branches, stop conditions, and handoff notes.
-- First actions the user or future team can take.
-- Reality checks linked to the phase in which they must occur.
-
-Keep proposed real actions clearly future-facing; they are instructions, not event claims.
-
-### Reality check
-
-Record `reality_check_id`, question, why it matters, owner, method, sample or environment, acceptance threshold, timing, failure route, and dependent conclusions.
-
-### Coverage record
-
-Check:
-
-- Definition-of-done to subgoal and guide-phase coverage.
-- Subgoal to capability coverage.
-- Applicable lifecycle stage to accountable role coverage.
-- Primary artifact to producer coverage.
-- Critical artifact to validator coverage.
-- Handoff and consumer closure.
-- Feasibility dimensions, reality checks, boundary, Mermaid, comprehension, and traceability gates.
-
-## Final response sequence
-
-Use these concepts in order, but localize and simplify headings:
-
-1. **One-time boundary and goal understanding.**
-2. **Recommended path and feasibility verdict.**
-3. **How the goal can be implemented**, with an end-to-end Mermaid diagram.
-4. **Complete implementation team**, described by responsibility and value.
-5. **Why the plan passed, changed, or remains conditional**, including decisive rejection and revision.
-6. **Reality-ready implementation guide**, phased and actionable.
-7. **Reality checks, risks, and highest-leverage user decisions.**
-8. **Optional structured appendix**, only when requested or useful.
-
-Do not lead with a team roster, event ledger, or coverage matrix. Do not make a non-expert read the simulation history before seeing the recommendation.
-
-## Compact and structured modes
-
-For a compact result:
-
-- Keep the one-time boundary, plain-language goal, recommendation, feasibility verdict, one Mermaid path, complete role coverage in summary form, decisive review finding, implementation phases, reality checks, and key decisions.
-- Omit internal IDs and low-value event detail.
-
-For structured data:
-
-- Validate roles against [role.schema.json](role.schema.json).
-- Preserve stable identifiers and evidence labels.
-- Include lifecycle applicability, coverage, `feasibility_assessment`, `implementation_guide`, and `reality_checks_required`.
-- Keep `execution_mode: simulation`, `simulation_only: true`, and `external_actions_performed: []`.
-- Never emit `actual_outcome` for a plan simulation.
-
-For a professional handoff:
-
-- Present the friendly summary first.
-- Add structured data after it.
-- Clearly separate plan-level findings, proposed future actions, and real evidence still required.
+- 第一屏是否直接回答了用户的问题？
+- 方案深度是否符合 `concise`、`standard` 或 `deep` 的选择？普通方案是否达到标准完整度，而不是只有摘要？
+- 方案是否足够具体，还是被流程和组织稀释了？
+- 实施深度是否与用户请求相称？
+- 既有方案是否得到尊重？
+- 组织是否轻到足够，而不是默认完整？
+- 每个标题和段落是否都有当前问题的实际内容？
+- 边界、可行性标签、图、团队、评审历史和现实检查是否确实相关？
+- 是否准确区分事实、假设、推导、模拟发现和现实证据？
+- 是否没有声称未发生的真实开发、测试、部署、反馈、收益或批准？

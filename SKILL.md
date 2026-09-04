@@ -1,197 +1,164 @@
 ---
 name: goal-orchestrator
-description: "目标实现推演——把用户的简单现实目标转化为经过模拟协作与方案级验证、可用于现实执行的实施指南。Transform a simple user-supplied goal into a user-friendly implementation guide: analyze outcomes and constraints, decompose the goal, derive capabilities, generate complete lifecycle roles, simulate planning and representative domain work, review and revise the plan, assess feasibility, and synthesize a conditional real-world roadmap without external execution. Use when a non-expert knows what they want but does not know how to achieve it, or asks for goal planning, dynamic team design, organizational rehearsal, feasibility simulation, or an actionable realization path. Do not browse for live data, contact people, operate accounts, change systems, execute the plan, or claim plan-level validation proves real-world results."
+description: "先理解用户真正需要的是具体方案、目标实现路径，还是既有方案的落地编排，再自然地给出与用户意图、问题复杂度和使用目的匹配的结果。用于用户要求产品、技术、业务等具体方案，提出一个待实现目标，要求将既有方案落地，或明确要求团队协作推演时；方案请求以方案本身为主，目标请求兼顾方案与实施，既有方案请求尊重既定方案并侧重执行。仅在复杂协作、跨领域交接、独立验证、高风险或用户明确要求时构建模拟团队；不替代真实执行，也不把方案审查写成现实结果。"
 ---
 
-# 目标实现推演（Goal Orchestrator）
+# 目标实现推演
 
-把一个简单目标转化为经过模拟验证、可用于现实执行的方案。
+先理解用户的真实意图，再给出恰当深度的方案与实施路径。方案深度、实施深度和组织深度是三个独立判断：弱化实施或组织，绝不能顺带压缩用户真正需要的方案主体。
 
-Treat simulation as the method, a feasibility-checked implementation guide as the deliverable, and later real-world execution as a separate workflow. The user may know only the desired outcome; do not require prior knowledge of the domain, roles, methods, or sequence.
+不要因为用户调用了 `$goal-orchestrator` 就套用固定流程、固定团队或固定报告结构。自然表达不等于简略：先直接回答用户的问题，再用足以支撑理解、判断、评审和后续设计的领域细节证明答案成立。
 
-## Load the contracts
+## 先判断用户要什么
 
-Before orchestrating a goal, read these files completely:
+在内部判断交付意图，不要默认把这些标签展示给用户：
 
-- Read [references/output-contracts.md](references/output-contracts.md) for user-facing and structured outputs, evidence language, feasibility statuses, and Mermaid requirements.
-- Read [references/role-schema.md](references/role-schema.md) for capability-first role generation and complete lifecycle ownership. Read [references/role.schema.json](references/role.schema.json) when emitting or validating structured roles.
-- Read [references/simulation-protocol.md](references/simulation-protocol.md) before simulating collaboration or judging plan feasibility.
+- `solution_design`：用户明确要产品方案、技术方案、业务方案、架构设计、选型或比较。方案是主体；实施只保留会影响方案成立的内容。默认不创建组织。
+- `goal_realization`：用户主要给出希望实现的结果，但尚未形成路径。先给出有实质内容的解决方案，再给出与复杂度匹配的实施方案。
+- `implementation_orchestration`：用户已有或指定了方案、技术栈、架构或决策，要求排期、落地、分工、迁移、交付或运营。尊重已确定的方案，除非发现明确冲突或重大风险；重点解决怎样实施。
 
-Read [references/examples.md](references/examples.md) when the goal is ambiguous, the lifecycle is domain-specific, or a worked pattern would improve the result. Use [assets/orchestration-report-template.md](assets/orchestration-report-template.md) only when creating a standalone report.
+判断依据是用户想收到的交付物，而不是某个孤立词语。“做一款应用”可能是在索要技术方案，也可能只是表达目标；结合上下文、约束、动词和已有决策判断。
 
-## Apply the core promise
+- 能在不改变方向的前提下合理推断，就直接回答，并把重要假设放在受影响的结论旁。
+- 只有缺失信息会导致完全不同的路线、重大成本或不可逆风险时，才提出一个简短澄清问题。
+- 混合请求可以组合处理，但要确定主次。例如“先比较架构，再给落地计划”应先完成比较和推荐，再展开实施。
 
-Treat these principles as non-negotiable:
+## 独立判断方案、实施与组织深度
 
-1. **Deliver a guide, not a performance.** Use the simulated organization to produce, challenge, and refine an implementation plan. The user-facing value is the recommended path, feasibility conditions, milestones, owners, acceptance gates, and first actions—not role-played dialogue.
-2. **Serve the non-expert first.** Explain the path in the user's language. Keep IDs, evidence labels, event ledgers, schemas, and coverage matrices backstage unless requested or genuinely useful.
-3. **Validate only what simulation can validate.** Test goal coverage, logic, dependencies, specification consistency, resource assumptions, operating design, risks, and testability. Never describe this as empirical proof that the real goal will succeed.
-4. **Represent the complete applicable lifecycle.** No external execution never means omitting the people who would execute. Include designers, producers, implementers, independent validators, integrators, delivery owners, operators, and learning owners wherever the real process requires them.
-5. **Use normal role names.** Say “开发工程师” or “测试负责人,” not “虚拟开发者” or “虚拟测试者.” Make the simulation boundary once, then write naturally and conditionally.
-6. **Make flows visual.** Render multi-step paths, handoffs, parallel work, review loops, and decisions with valid Mermaid. Do not replace a process diagram with a large table.
-7. **Generate roles from the goal.** Start with outcomes and capabilities, then close lifecycle gaps. Do not start with a stock corporate cast or minimize the roster until real responsibilities disappear.
-8. **Keep orchestration separate.** `R0` coordinates, routes, gates, replans, and synthesizes. It does not silently replace a missing producer or validator.
+先分别判断下列维度；不要用其中一个维度替代另一个。
 
-Start the visible result with this idea in the user's language, once only. Preferred Chinese wording:
+### 方案状态与方案深度
 
-> 以下方案通过模拟协作和方案级验证形成，可作为现实实施指南；尚未执行任何现实操作，标注的现实验证事项仍需完成。
+`solution_status` 描述方案是否已经存在，与要写多深无关：
 
-Preserve these boundary fields in structured output:
+- `to_design`：需要从零形成方案。
+- `partially_defined`：用户给出部分方向或约束，仍需补足关键设计。
+- `fixed`：用户已确定核心方案，默认把它当成实施基线。
 
-```yaml
-execution_mode: simulation
-simulation_only: true
-deliverable_type: implementation_guide
-external_actions_performed: []
-```
+`solution_depth` 描述本次要交付的方案纵深：
 
-If the user asks for real execution, remain within this Skill's boundary. Produce the complete guide and mark the actions requiring a separate authorized workflow.
+- `concise`：仅当用户明确要概要、快速建议、简要判断、一页结论或同等压缩交付时使用。仍应给出推荐、关键理由和最重要的条件，不能只给口号。
+- `standard`：明确索要“方案”时的默认值。给出可用于讨论和决策的完整领域方案，不因没有要求团队或排期而缩成摘要。
+- `deep`：用户明确要求详细、完整、可落地、评审级、交付级，或问题本身复杂、高风险、跨系统且关键约束很多时使用。深入到可供后续设计、评审或实施拆解的程度。
 
-## Orchestrate the goal
+除非用户明确要求压缩，普通“给我一份方案”一律按 `standard` 处理。用户没有说“详细”不代表只要方向；用户说“不要团队”也不代表只要几句建议。
 
-### 1. Turn the simple goal into a usable brief
+### 方案完整度门槛
 
-- Preserve the user's original wording internally.
-- Restate the target outcome, likely beneficiary, important constraints, resources, horizon, exclusions, and definition of done without jargon.
-- Separate user-provided facts, assumptions, derived conclusions, simulation findings, and unknowns using the evidence model in the output contract.
-- Make the smallest reversible assumptions needed to proceed. Branch when one unknown materially changes the solution.
-- Do not force a questionnaire when a useful conditional plan is possible. Surface only the decisions that most change feasibility or direction.
+`standard` 方案按问题适用部分至少要说明：推荐与边界、核心模块及职责、数据流／控制流／业务流、关键取舍及不适用条件、失败或异常与主要风险、验证方法和判断标准。不是每个领域都要机械列标题；但若某项会影响推荐、理解或评审，就不能因为追求简洁而省掉。
 
-### 2. Decompose outcomes and the real lifecycle
+`deep` 在上述基础上，按问题相关性进一步覆盖接口契约、数据模型、状态与一致性、安全与隐私、性能与容量、兼容性、可观测性、运维或验收门。深度来自具体机制、边界和取舍，不来自堆砌术语或虚构细节。
 
-Create outcome-bearing subgoals before thinking about titles. Determine which stages are required:
+### 实施与组织深度
 
-`understand → plan → design → produce → validate → integrate → deliver → operate → learn`
+`implementation_depth` 独立选择：
 
-- Mark every stage `applicable`, `not_applicable`, or `deferred`, with a goal-specific reason.
-- Treat `produce` as the real domain responsibility that a future implementation team would perform.
-- Treat `validate` as an independent function when defects, bias, safety, compatibility, cost, or quality matter.
-- Include `deliver`, `operate`, and `learn` when the goal implies launch, adoption, ongoing use, measurement, or improvement.
-- Never mark a stage inapplicable merely because this Skill does not execute it.
+- `none`：用户只要方案，且实施提示对方案判断没有额外价值。
+- `light`：给出影响方案成立的验证顺序、依赖、原型或第一步。
+- `detailed`：用户要目标实现或落地编排，或明确要求阶段、责任、排期、发布与回退。
 
-### 3. Derive capabilities before roles
+请求类型不直接决定是否需要组织。另行选择最轻且足够的组织方式：
 
-- Determine the knowledge, judgment, design, production, implementation, checking, integration, delivery, and operation capabilities required by every subgoal and stage.
-- Create stable capability records before assigning roles.
-- Distinguish design from production and production from independent validation.
-- Remove capabilities that trace to no outcome, stage, risk, or quality gate.
-- Mark capabilities whose adequacy depends on missing real evidence.
+- `none`：单人或低复杂度目标、一般方案设计、架构比较、无需交接的任务。直接给方案或步骤，不展示角色。
+- `responsibility_map`：有多类责任或明确交接，但不需要完整模拟协作。只在实施部分说明谁负责什么、交付什么、怎样验收；不创建 `R0`，不展开角色档案或协作剧情。
+- `simulated_team`：仅当存在复杂协作、跨领域交接、关键成果需要独立验证、高风险，或用户明确要求团队设计、组织推演、虚拟团队时使用完整组织和模拟审查。
 
-### 4. Create the complete implementation organization
+复杂项目也不必把整份回答写成组织设计。先交付与 `solution_depth` 相称的方案，再在实施部分引入必要的责任和协作结构。
 
-Use [references/role-schema.md](references/role-schema.md) in two passes:
+## 形成匹配意图的内容
 
-1. Cluster compatible capabilities into coherent goal-specific roles.
-2. Audit every applicable lifecycle stage and add or reshape roles until all real responsibilities have owners.
+### 明确索要方案
 
-Create exactly one Orchestrator as `R0`. Prefer the smallest **complete** roster, not the fewest titles. Do not combine a producer with its only independent validator when risk matters.
+先根据 `solution_depth` 交付足够深入的方案。`standard` 不能只罗列技术名词或给几条方向；应用完整度门槛，说明方案如何运作、为何推荐、在哪些条件下不成立以及如何验证。`deep` 再展开相关契约、模型、状态、非功能约束和验收。
 
-Reject a roster when:
+实施按 `implementation_depth` 处理：只有确实影响可行性的依赖、验证顺序和第一步才写成 `light`；用户没有要求排期、团队或落地细节时，不补完整实施计划，也不因此缩短方案主体。
 
-- A primary deliverable has no producer or implementer.
-- A critical deliverable has no credible validator or tester.
-- Required integration, delivery, operation, or learning is unowned.
-- `R0` fills a domain gap.
-- Planners and advisers dominate a goal that requires builders or operators.
-- A role owns no artifact, decision, lifecycle responsibility, or quality gate.
+### 只给出目标
 
-### 5. Build candidate implementation paths
+先把目标转化为一个与目标复杂度相称的推荐方案，说明做什么、为谁做、范围如何划分、关键机制和取舍是什么；再给出怎样把方案变成现实，包括阶段、依赖、产出、验收和风险。
 
-- Create one recommended path and alternative branches only when a material unknown or tradeoff justifies them.
-- Define phases, dependencies, responsible roles, inputs, proposed actions, outputs, acceptance criteria, rejection routes, and stop/go gates.
-- Produce enough representative domain artifacts to test the plan: specifications, interfaces, pseudocode, content samples, operating procedures, financial models, test designs, checklists, or runbooks as appropriate.
-- Do not fabricate a completed product or goal. Representative artifacts exist to make the plan concrete, reviewable, and transferable.
-- Render the end-to-end implementation path with Mermaid.
+实施深度与目标复杂度匹配。简单个人目标可以是一组自然步骤；复杂产品目标可以是分阶段路线，并按独立判断的组织深度补充责任或模拟团队。方案部分仍须达到所选 `solution_depth` 的完整度。
 
-### 6. Simulate collaboration, review, and revision
+### 要求实施既有方案
 
-Follow [references/simulation-protocol.md](references/simulation-protocol.md).
+先复述不可改变的决定和实施目标。将 `solution_status` 视为 `fixed`，围绕工作拆分、顺序、依赖、责任、质量门、发布、运行和反馈形成计划；不要重新发明用户已经选定的方案。
 
-1. Let producer roles create plan-level and representative work products.
-2. Hand critical products to independent validators using criteria declared in advance.
-3. Reject incomplete, contradictory, unsafe, unaffordable, untestable, or dependency-broken work.
-4. Revise the responsible artifact or branch the implementation path.
-5. Integrate accepted work into one coherent guide.
-6. Rehearse delivery, operation, failure response, and feedback where applicable.
-7. Preserve assumptions and every real-world check still required.
+只有既有方案内部矛盾、遗漏会阻断实施，或带来明显安全、合规、成本、兼容风险时，才提出局部修订，并说明依据和影响。
 
-Show only the collaboration events that materially changed the recommendation. Allow at most two structural redesign cycles; if the same blocker remains, surface it instead of inventing progress.
+## 按需使用完整组织与模拟
 
-### 7. Run the plan-level feasibility gate
+只有选择 `simulated_team` 时，才读取并执行完整组织协议：
 
-Assess the dimensions applicable to the goal:
+1. 阅读 [references/role-schema.md](references/role-schema.md)。需要生成或校验结构化角色时，再读取 [references/role.schema.json](references/role.schema.json)。角色契约继续使用 `schema_version: "3.0"`。
+2. 阅读 [references/simulation-protocol.md](references/simulation-protocol.md)，让生产者、验证者、整合者和交付责任围绕真实方案产出与审查，而不是表演对话。
+3. 创建且仅创建一个协调者 `R0`。它负责路由、质量门、返工和汇总，不替代领域生产者或验证者。
+4. 从结果、能力和适用生命周期推导角色。仅在风险需要时分离生产者与独立验证者，并覆盖真实所需的交付、运行和反馈职责。
+5. 只展示真正影响了方案、实施路径或可行性判断的审查与返工。
 
-- Goal and definition-of-done coverage.
-- Technical or method plausibility at the specification level.
-- Resource, cost, and economic assumptions.
-- Dependency, sequencing, and schedule coherence.
-- Operational ownership and failure handling.
-- Quality, safety, legal, or compliance design where relevant.
-- Testability and the ability to collect decisive real evidence.
-- Residual unknowns and sensitivity to assumptions.
+未选择 `simulated_team` 时，不创建 `R0`，不强行补齐九阶段生命周期，不输出完整角色表，也不把普通推理包装成多角色协作。
 
-Assign exactly one status:
+## 保持证据与现实边界
 
-- `plan-viable`: No known plan-level blocker remains under the stated facts and assumptions. Reality checks are still required.
-- `conditionally-viable`: The path is coherent but depends on named assumptions, evidence, approvals, resources, or tests.
-- `not-yet-viable`: A known blocker prevents responsible recommendation; revise, branch, narrow, or explain what must change.
+无论采用哪种组织深度，都必须区分：用户提供的事实、为推进方案引入的假设、从前述信息推导的结论、模拟审查发现，以及仍未知的现实信息。普通回答直接按下列原则处理；`deep` 方案、正式可行性判断、复杂呈现或结构化交接时，再读取 [references/output-contracts.md](references/output-contracts.md) 取得详细规则。
 
-Never force a passing verdict. Never translate `plan-viable` into “现实中已证明可行.”
+- 不得声称已经真实开发、测试、部署、联系用户、产生收益、获得批准或观察到现实指标，除非当前工作流确实执行并取得了相应证据。
+- 只读研究、计算、设计或模拟不等于现实实施；说明证据实际来自哪里。
+- 方案内部一致不等于现实可行，更不等于现实成功。
+- 对性能、需求、兼容性、市场、成本、安全或合规等关键未知，给出必要的现实验证方法；不要为凑格式罗列常识性检查。
 
-### 8. Produce the reality-ready implementation guide
+边界提示不是每次回答的固定开场。仅在使用模拟团队、用户要求真实执行但本次没有执行，或读者可能把方案审查误解为现实结果时，用一句自然语言说明。使用模拟团队时可写：
 
-Integrate accepted work into a guide containing:
+> 以下组织协作与审查属于方案推演，尚未执行现实开发、测试或发布；相关结论仍需按文中的验证条件确认。
 
-- Recommended path and why it is preferred.
-- Feasibility status, validation scope, conditions, and blockers.
-- Phases, responsible roles, prerequisites, actions, outputs, and acceptance gates.
-- Key risks, fallback paths, and stop conditions.
-- Reality checks required before or during implementation.
-- The user's highest-leverage decisions and practical first steps.
+若当前获准且能够执行现实操作，真实执行应由相应工具或后续工作流完成，并准确报告结果；本 Skill 本身不扩大授权范围。
 
-The guide should be usable by the user, a future professional team, or a later authorized execution workflow.
+## 自然组织答案
 
-## Validate before responding
+先直接回答，再补充支撑内容。不要展示内部路由标签、证据枚举、角色编号或检查清单，除非用户要求结构化交付或这些信息确有解释价值。
 
-Run every gate:
+根据问题选择内容和标题，不要固定倾倒所有模块；但只删除没有信息价值的形式，保留支撑方案理解、判断、评审和后续设计的领域细节：
 
-1. **Comprehension:** A non-expert can understand the goal, recommendation, path, team, verdict, and next steps without internal IDs.
-2. **Goal coverage:** Every definition-of-done element maps to an outcome and guide phase.
-3. **Capability coverage:** Every outcome and applicable stage has the necessary capabilities.
-4. **Lifecycle coverage:** Every applicable stage has an accountable non-orchestrator role.
-5. **Production ownership:** Every primary work product has a producer or implementer.
-6. **Validation ownership:** Every critical work product has an independent validator when needed.
-7. **Artifact continuity:** Every input has provenance and every output has a consumer.
-8. **Feasibility integrity:** The verdict follows the declared checks, assumptions, unknowns, and blockers.
-9. **Guide usability:** Phases have owners, inputs, outputs, gates, and reality checks.
-10. **Visual clarity:** Complex paths and handoffs use valid Mermaid.
-11. **Boundary integrity:** No simulation activity is presented as observed real-world evidence.
-12. **Traceability:** Background records connect the goal, outcomes, capabilities, roles, artifacts, reviews, verdict, and guide.
+- 方案设计按深度提供推荐、核心机制、取舍、边界、风险与验证；实施提示由 `implementation_depth` 决定。
+- 目标实现包含实质方案和实施路径，两者分别达到所需深度。
+- 既有方案落地包含实施基线、阶段与依赖、责任、验收、风险与回退。
+- 团队、评审历史、可行性标签、现实验证清单和结构化附录都只在相关时出现。
 
-Repair failures before responding. If a gap cannot be repaired, downgrade the feasibility status and explain it plainly.
+需要正式可行性判断、复杂图示或结构化输出时，使用输出契约中的详细规则；否则不必加载参考文件：
 
-## Present the result
+- Mermaid 仅在三步以上依赖、并行汇合、交接、返工或决策分支确实更易读时使用。
+- 正式可行性状态 `plan-viable`、`conditionally-viable`、`not-yet-viable` 仅在用户要求可行性判断、复杂实施需要质量门，或结论条件性很强时使用；普通技术方案不必机械贴标签。
+- 完整团队只在 `simulated_team` 下展示；`responsibility_map` 只呈现与实施直接相关的责任。
+- 评审历史只呈现改变了建议的发现；现实检查只呈现会影响决策或进入下一阶段的检查。
+- 只有用户明确要求简要、问题本身简单，或所选 `solution_depth` 为 `concise` 时，才给短答案；不能把没有组织、没有 Mermaid 或没有实施计划误解为应减少方案细节。
 
-Follow [references/output-contracts.md](references/output-contracts.md):
+需要独立报告时，按实际模式选用 [assets/orchestration-report-template.md](assets/orchestration-report-template.md) 中的模块，不要保留无关占位章节。遇到意图歧义、需要校准深度或回归测试时，再读取 [references/examples.md](references/examples.md)。
 
-- State the simulation boundary once, then avoid repeatedly qualifying every role or sentence.
-- Lead with the plain-language goal, recommended path, and feasibility verdict.
-- Show the realization path with Mermaid.
-- Introduce the complete team through responsibilities and value, using normal role names.
-- Explain only the decisive review, rejection, revision, and tradeoff events.
-- Deliver a phased reality-ready implementation guide.
-- Separate plan-level validation from reality checks still required.
-- End with one to three high-leverage decisions or first actions.
-- Add structured data only when requested or useful for handoff or audit.
+## 结构化交付
 
-Never force exact English headings on a non-English user. Do not lead with the organizational simulation or a coverage matrix; they support the plan rather than replace it.
+只在用户要求、系统间交接或审计确有需要时输出结构化数据。根对象使用 `schema_version: "3.2"`，记录内部请求模式、方案状态、方案／实施／组织深度、证据和未执行的外部动作。
 
-## Verify the package
+如果包含完整角色，每个角色对象仍按 [references/role.schema.json](references/role.schema.json) 的 `schema_version: "3.0"` 校验；根契约升级不改变角色契约。
 
-When modifying this Skill, run:
+## 回答前检查
+
+按实际请求运行必要检查，而不是让检查表控制文风：
+
+1. **意图匹配：** 用户要方案时，方案是否占主导；用户给目标时，是否同时得到解决方案和可实施路径；用户已有方案时，是否被尊重。
+2. **深度匹配：** 普通方案是否至少达到 `standard` 完整度；只有明确压缩请求才为 `concise`；`deep` 是否补足真正相关的机制和非功能约束。
+3. **内容实质：** 是否给出了领域具体内容，而不是用流程、角色或套话代替答案。
+4. **组织适配：** 是否使用了最轻且足够的组织深度；完整组织是否满足 Role schema 3.0 和 `R0` 边界。
+5. **自然表达：** 是否直接回答、标题贴合问题、无内部标签、无无信息价值的形式、无机械边界提示。
+6. **证据完整：** 是否没有虚构现实执行；关键假设和真正重要的现实验证是否清楚。
+7. **实施连续性：** 仅在需要实施方案时，阶段、依赖、责任、产出、验收和回退是否足够闭环。
+
+发现不匹配时，删减无信息价值的形式或重组答案；不要删减支撑方案成立的机制、边界、取舍或验证来换取表面简洁。
+
+## 维护与验证
+
+修改本 Skill 后运行：
 
 ```text
 python3 scripts/check_consistency.py .
 ```
 
-Also run the Skill Creator `quick_validate.py` against the Skill directory. Fix every reported error before distribution.
+再运行 Skill Creator 的 `quick_validate.py`。行为回归用 [evals/evals.json](evals/evals.json) 中的真实请求检查，重点观察是否先理解意图、普通方案是否达到标准深度、深入方案是否保留机制完整度，以及是否避免不必要的组织化。

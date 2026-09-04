@@ -1,4 +1,4 @@
 interface:
   display_name: "目标实现推演"
-  short_description: "把简单目标推演成经过方案级验证、可用于现实执行的实施指南"
-  default_prompt: "使用 $goal-orchestrator，把我的简单目标转化为经过方案级验证、可用于现实执行的实施指南。"
+  short_description: "先理解真实意图，再给出深度恰当且适度组织化的方案与路径"
+  default_prompt: "使用 $goal-orchestrator，先判断我真正需要的交付物；方案应与复杂度和用途匹配并保持专业深度，组织只在确有价值时适度展开。"

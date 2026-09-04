@@ -1,337 +1,235 @@
-# Plan Simulation and Feasibility Protocol
+# 完整组织的方案推演协议
 
-Use this protocol for “目标实现推演.” Simulate the complete applicable organization and enough representative work to develop, challenge, and refine a reality-ready implementation guide without changing the real world.
+仅当组织深度为 `simulated_team` 时使用本协议。它让完整组织围绕已经理解的用户意图形成、审查和改进方案与实施路径；不能把模拟组织本身变成交付物的主角。
 
-## Contents
+普通方案、架构比较、简单目标和责任映射不执行本协议，也不需要为了满足协议而补团队、审查记录、可行性标签或边界声明。
 
-1. [Meaning and boundary](#meaning-and-boundary)
-2. [Simulation method versus real execution](#simulation-method-versus-real-execution)
-3. [Required initial state](#required-initial-state)
-4. [State model](#state-model)
-5. [Lifecycle simulation](#lifecycle-simulation)
-6. [Event and artifact procedure](#event-and-artifact-procedure)
-7. [Handoff and rejection protocol](#handoff-and-rejection-protocol)
-8. [Plan-level feasibility validation](#plan-level-feasibility-validation)
-9. [Conflict and replanning](#conflict-and-replanning)
-10. [Scenario rules](#scenario-rules)
-11. [Stop conditions](#stop-conditions)
-12. [Failure modes](#failure-modes)
-13. [Final integrity audit](#final-integrity-audit)
+## 目录
 
-## Meaning and boundary
+1. [进入条件](#进入条件)
+2. [边界与产出](#边界与产出)
+3. [开始前状态](#开始前状态)
+4. [状态与证据](#状态与证据)
+5. [推演过程](#推演过程)
+6. [成果与交接](#成果与交接)
+7. [方案级可行性](#方案级可行性)
+8. [冲突、返工与停止](#冲突返工与停止)
+9. [失败模式](#失败模式)
+10. [完整性检查](#完整性检查)
 
-Begin the visible answer with a localized statement equivalent to:
+## 进入条件
 
-> 以下方案通过模拟协作和方案级验证形成，可作为现实实施指南；尚未执行任何现实操作，标注的现实验证事项仍需完成。
+只有以下因素之一真实存在，且完整组织能够提高答案质量时才进入：
 
-The central model is:
+- 复杂协作或跨专业并行工作。
+- 多个关键交接和整合点。
+- 关键成果需要生产者之外的独立验证。
+- 安全、合规、资金、隐私、数据、兼容、发布或运行风险高。
+- 用户明确要求完整团队、组织推演或协作审查。
 
-- **Method:** simulated organizational collaboration, representative domain work, review, rejection, revision, integration, and stress testing.
-- **Deliverable:** an implementation guide with a plan-level feasibility verdict, owners, phases, acceptance gates, and required reality checks.
-- **Boundary:** no real repository, device, person, account, organization, market, payment, deployment, or operating environment is touched.
+进入前必须已经判断用户要的是具体方案、目标实现，还是既有方案实施。推演服务于该意图：
 
-After the one-time notice, use ordinary role titles and natural language. Do not prefix every role, activity, or artifact with “virtual” or “simulated.” Use simulation language again only when needed to protect the evidence boundary.
+- 方案请求：先形成具体方案，再让组织审查高风险或跨域部分；实施仍然可以保持简要。
+- 目标请求：组织可同时完善实质方案和详细实施路径。
+- 既有方案实施：尊重既定方案，组织围绕实施、验证、交付和运行展开；除非发现阻断问题，不重做选型。
 
-## Simulation method versus real execution
+## 边界与产出
 
-Allowed simulation work includes:
+推演允许：
 
-- Interpreting accepted inputs and defining measurable outcomes.
-- Designing candidate plans, systems, products, services, content, or operating models.
-- Producing specifications, pseudocode, representative samples, mock records, financial models, implementation blueprints, checklists, and runbooks.
-- Reviewing those artifacts against declared criteria.
-- Finding logic, interface, coverage, dependency, evidence, cost, safety, or specification defects.
-- Rejecting a handoff and requesting a revision.
-- Rehearsing launch, operation, incidents, measurement, and feedback under explicit assumptions.
-- Integrating accepted work into a guide for later real implementation.
+- 解释目标、约束和成功标准。
+- 设计方案、系统、产品、服务、内容或运营模型。
+- 形成规格、接口、伪代码、代表性样本、财务模型、测试设计、检查表和运行手册。
+- 按预先标准审查成果，发现逻辑、覆盖、依赖、接口、成本、安全和证据缺口。
+- 退回、修订、分支和整合方案。
+- 在明确假设下演练交付、运行、故障和反馈。
 
-Forbidden real-execution claims include:
+推演不能被描述为已经发生的现实开发、运行、用户研究、设备测试、部署、审批、交易、营收或时间流逝。只读资料、代码检查或工具实际取得的证据应按真实来源说明，也不能因为进入模拟协议而改写成模拟发现。
 
-- “The developer built and ran the application.”
-- “The tester verified the application on three cameras.”
-- “Twenty customers preferred the workflow.”
-- “The release passed notarization.”
-- “The campaign increased revenue.”
-- “The trading strategy achieved the simulated return in a live account.”
+用户可见边界自然说明一次：
 
-Replace them with accurate plan-level statements:
+> 以下组织协作与审查属于方案推演，尚未执行现实开发、测试或发布；相关结论仍需按文中的验证条件确认。
 
-- “The development blueprint covers the application modules and interfaces; no build was run.”
-- “The compatibility review identified specification gaps and defined the camera-file tests required before release.”
-- “The workflow hypothesis remains dependent on real customer validation.”
-- “The risk model is internally consistent under stated assumptions; no live or historical execution result was observed.”
+方案或实施重点应先出现；不要用边界声明和团队介绍抢占第一屏。
 
-Never use the boundary to omit the developer, tester, operator, writer, producer, release owner, risk owner, or other role required by the real process.
+## 开始前状态
 
-## Required initial state
+开始角色协作前，至少存在：
 
-Do not begin collaboration events until these exist:
+1. 已判断的用户交付意图及其主次。
+2. 当前可用的具体方案；对于目标请求，可以是待完善的候选方案。
+3. 用户事实、关键假设、未知和成功标准。
+4. 需要组织解决的结果、能力、风险和生命周期缺口。
+5. 符合 [role-schema.md](role-schema.md) 的最小完整组织。
+6. 需要生产、审查或整合的代表性成果及预先验收标准。
+7. 可行路径、退回路线和不能由推演解决的现实检查。
 
-1. Plain-language Goal Brief and definition of done.
-2. Outcome-bearing subgoals.
-3. Lifecycle applicability map for all nine canonical stages.
-4. Capability map created before the roster.
-5. Complete role roster satisfying capability and lifecycle coverage.
-6. At least one candidate implementation path with artifacts, consumers, acceptance gates, and rejection routes.
-7. Artifact registry for planned representative work products.
-8. Assumption, unknown, risk, and reality-check ledgers.
-9. A frontstage plan that prioritizes recommendation and usability over simulation detail.
+不要先创建角色，再反向发明它们要解决的问题。
 
-If an applicable stage lacks a producer, validator, delivery owner, or operator, repair the organization before the first event.
+## 状态与证据
 
-## State model
+按复杂度维护必要状态，不要求在用户界面全部输出：
 
-Maintain:
-
-| Collection | Contents |
+| 集合 | 内容 |
 |---|---|
-| `goal_state` | Goal, definition of done, constraints, resources, and confidence |
-| `lifecycle` | Applicability, owners, artifacts, and reality checks by stage |
-| `subgoals` | Dependencies, guide phases, and status |
-| `capabilities` | Need, owner, stage, depth, limit, and evidence requirement |
-| `roles` | Role contracts, contribution modes, and activation state |
-| `artifacts` | Planned, drafted, accepted, conditionally accepted, rejected, revised, or superseded work |
-| `assumptions` | Material assumptions and dependent conclusions |
-| `unknowns` | Missing evidence, impact, and validation method |
-| `risks` | Trigger, impact, owner, mitigation, and stop condition |
-| `decisions` | Options, criteria, owner, branch, and evidence |
-| `events` | Ordered material state changes |
-| `feasibility_assessment` | Dimensions, findings, conditions, blockers, and status |
-| `implementation_guide` | Recommended path, phases, owners, gates, and first actions |
-| `reality_checks_required` | Questions that only real evidence can resolve |
+| `goal_state` | 用户目标、当前方案、约束和成功标准 |
+| `capabilities` | 组织必须提供的实现、判断和验证能力 |
+| `roles` | 角色边界、激活条件和贡献方式 |
+| `artifacts` | 计划、草拟、接受、有条件接受、退回、修订或替代的成果 |
+| `assumptions` | 假设及受其影响的结论 |
+| `unknowns` | 缺少的现实信息、影响和验证方法 |
+| `risks` | 触发、影响、负责人、缓解和停止条件 |
+| `decisions` | 选项、标准、决策权和结果 |
+| `events` | 真正改变成果、路径、判断或实施指南的事件 |
+| `feasibility_assessment` | 方案级检查、条件、阻碍和状态 |
+| `reality_checks_required` | 只有现实证据才能回答的问题 |
 
-Change state only through a logged event. Preserve rejected and superseded records.
+重要主张使用 `USER_FACT`、`ASSUMPTION`、`DERIVED`、`SIMULATED` 或 `UNKNOWN`。重复假设不能使其变成事实。拒绝和替代的成果应保留追溯状态，不能改写历史。
 
-## Lifecycle simulation
+## 推演过程
 
-Represent all applicable stages, merging adjacent stages only when responsibilities remain visible:
+根据问题合并或省略不适用的轮次，但保留真正需要的生产、独立验证、整合与交付责任。
 
 ```mermaid
 flowchart TD
-    U["理解目标和成功标准"] --> P["规划候选实现路径"]
-    P --> D["设计解决方案"]
-    D --> B["形成代表性工作成果"]
-    B --> V["独立审查与压力测试"]
-    V --> Q{"方案级验证通过？"}
-    Q -- "否" --> P
-    Q -- "有条件" --> C["记录条件和现实验证门"]
-    Q -- "是" --> I["整合实施指南"]
-    C --> I
-    I --> R["规划交付、运行和反馈"]
+    A["确认用户意图和当前方案"] --> B["形成需要审查的具体成果"]
+    B --> C["跨专业整合与独立审查"]
+    C --> D{"预先标准是否满足？"}
+    D -- "否" --> E["退回最小受影响部分"]
+    E --> B
+    D -- "有条件" --> F["记录条件与现实验证门"]
+    D -- "满足" --> G["整合推荐方案或实施路径"]
+    F --> G
 ```
 
-### Round 1 — Understand, plan, and design
+### 形成实质成果
 
-- Clarify outcomes, constraints, resources, horizon, and acceptance criteria.
-- Produce the minimum design artifacts needed before judging implementation.
-- Challenge consequential assumptions early.
-- Do not allow design roles to stand in for production roles.
+- 生产或实施责任形成足以检查方案的具体成果，例如接口、数据模型、流程、规则、代表性样本、伪代码、测试矩阵或运行手册。
+- 方案请求把工作集中在核心设计和高风险取舍，不因使用团队就自动扩成完整项目计划。
+- 目标请求先填补方案内容，再形成与复杂度匹配的实施路径。
+- 既有方案实施只补实施所需细节，除非已知冲突迫使局部调整。
+- 成果标记 `created_in_simulation: true`，但用户可见文本不必反复使用“模拟”前缀。
 
-### Round 2 — Make the implementation concrete
+### 独立审查
 
-- Activate implementers, makers, writers, operators, or other domain producers.
-- Create representative work products sufficient to expose interfaces, dependencies, resource needs, failure paths, and quality criteria.
-- Record unresolved dependencies and reality checks.
-- Mark generated artifacts `created_in_simulation: true`.
-- Do not fabricate a finished product when a blueprint, sample, specification, prototype plan, or runbook is the honest output.
+- 关键成果交给与生产者不同的验证责任。
+- 验收标准在审查前确定，不能看到结果后降低标准。
+- 检查内部逻辑、接口、依赖、错误路径、资源、质量、安全和可测试性。
+- 将方案层能判断的内容与必须现实执行的测试分开。
+- 结果只能是接受、有条件接受或退回。
 
-### Round 3 — Validate and stress-test
+### 修订与整合
 
-- Transfer critical work products to declared validators.
-- Apply criteria fixed before review.
-- Check internal coherence, feasibility dimensions, failure paths, and testability.
-- Separate plan-level findings from tests requiring real execution.
-- Accept, conditionally accept, or reject.
+- 将缺陷退回负责的生产者，修订最小受影响成果。
+- 保留退回版本及原因；不要把修订写成第一次就正确。
+- 跨成果冲突由整合责任协调共享契约。
+- 只把改变推荐、实施门槛或可行性判断的事件呈现给用户。
 
-### Round 4 — Revise and integrate
+### 交付与运行演练
 
-- Return defects to the accountable producer.
-- Preserve rejected versions.
-- Revise the smallest affected artifact or branch the implementation path.
-- Reconcile accepted components, terminology, interfaces, constraints, resources, and failure behavior.
+目标需要上线、采用、运营、维护或学习时，检查责任、移交条件、观察信号、故障处理、回退和反馈。方案请求若只涉及设计，可以只指出这些接口，不必强行展开完整运行计划。
 
-### Round 5 — Judge feasibility
+## 成果与交接
 
-- Evaluate all applicable feasibility dimensions.
-- Assign `plan-viable`, `conditionally-viable`, or `not-yet-viable`.
-- Link every condition and blocker to evidence, an owner, and a reality check or redesign action.
-- Never force a passing status merely to satisfy the original goal.
-
-### Round 6 — Assemble the implementation guide
-
-- Convert accepted work into phases, owners, prerequisites, proposed actions, outputs, acceptance gates, fallback routes, and stop conditions.
-- Plan delivery, adoption, operation, maintenance, measurement, and improvement where applicable.
-- Identify the user's next decisions and first practical actions.
-- Keep the visible summary concise even when the backstage simulation is detailed.
-
-For simple goals, combine rounds without removing an applicable responsibility. For complex goals, add targeted iterations while preserving the two-redesign-cycle limit.
-
-## Event and artifact procedure
-
-For every material event:
-
-1. Select one accountable active role.
-2. Confirm lifecycle stage, contribution mode, activation conditions, and decision rights.
-3. List consumed artifacts, assumptions, and unknowns.
-4. Perform one bounded `simulation_action`.
-5. Produce, review, reject, revise, integrate, or hand off an artifact.
-6. Record evidence class and reality checks not performed.
-7. Update state without erasing history.
-8. State whether the consequence changes the candidate path, feasibility verdict, or guide.
-9. Translate only the meaningful consequence into user-friendly prose.
-
-Prefer:
-
-> “质量负责人发现导出流程没有定义损坏文件的处理方式，因此将实现蓝图退回开发负责人修改。”
-
-Avoid:
-
-> “EV8 caused ART5 to transition to rejected.”
-
-Keep the second representation backstage when traceability is useful.
-
-## Handoff and rejection protocol
-
-Use this flow:
+每个关键交接遵循：
 
 ```mermaid
 sequenceDiagram
-    participant P as "生产或实施负责人"
+    participant P as "成果负责人"
     participant V as "独立验证负责人"
-    participant I as "方案整合负责人"
-    P->>V: 提交代表性成果、依据和验收条件
-    V->>V: 审查方案层可验证的内容
-    alt "未达到标准"
+    participant I as "整合与交付负责人"
+    P->>V: 提交成果、依据和验收条件
+    alt 未达到标准
         V-->>P: 指出缺陷并退回
         P->>V: 提交修订成果
-    else "有条件或完全达到标准"
-        V->>I: 提交结论、条件和现实验证项
+    else 有条件或完全达到标准
+        V->>I: 提交结论、条件和剩余验证项
     end
-    I->>I: 整合实施指南和可行性结论
+    I->>I: 整合推荐与实施门槛
 ```
 
-For every handoff:
+交接包含：
 
-1. **Offer:** Producer names the artifact, evidence, and unperformed reality checks.
-2. **Intake:** Consumer confirms completeness and authority.
-3. **Review:** Validator applies predeclared criteria.
-4. **Disposition:** Accept, conditionally accept, or reject.
-5. **Route:** Continue, revise, branch, escalate, or stop.
+1. **提交：** 生产者说明成果、依据、假设和未做的现实检查。
+2. **接收：** 下游确认输入完整且角色有权处理。
+3. **审查：** 验证者使用预先标准。
+4. **处置：** 接受、有条件接受或退回。
+5. **路由：** 继续、修订、分支、升级或停止。
 
-A conditional acceptance must name the unresolved condition and prevent it from becoming a fact downstream.
+有条件接受必须记录未解决条件，不能在下游把它当成事实。
 
-## Plan-level feasibility validation
+## 方案级可行性
 
-### What the simulation can validate
+只有用户要求可行性判断，或复杂实施确实需要正式质量门时才分配状态。可检查：
 
-- Goal, requirement, lifecycle, and guide coverage.
-- Internal logic, arithmetic, and assumption consistency.
-- Technical or method plausibility at the specification level.
-- Interface and dependency compatibility at the design level.
-- Resource categories, cost model structure, and sensitivity to assumptions.
-- Sequencing, critical dependencies, decision gates, and schedule logic.
-- Operating ownership, failure handling, and recovery design.
-- Error-path, edge-case, safety, and quality-control completeness.
-- Traceability to accepted inputs.
-- Whether planned real tests can answer the remaining questions.
+- 目标、需求、责任和实施覆盖。
+- 逻辑、计算、接口和假设的一致性。
+- 技术或方法在规格层的合理性。
+- 资源类别、成本模型和顺序依赖。
+- 运行责任、失败处理与恢复设计。
+- 错误路径、安全、质量和现实测试设计。
 
-### What requires real validation
+不能仅靠推演证明：
 
-- Compilation, runtime behavior, crashes, memory, latency, or benchmarks.
-- Hardware, operating-system, file-format, broker, exchange, device, or platform compatibility.
-- User preference, usability, willingness to pay, demand, or adoption.
-- Supplier capacity, staff performance, service quality, or operational results.
-- Legal advice, approval, certification, signing, notarization, or store review.
-- Revenue, return, loss, cost, schedule, quality, or performance observed in reality.
+- 编译、运行、崩溃、延迟、内存或基准表现。
+- 设备、平台、格式、经纪商或操作系统兼容性。
+- 用户偏好、付费意愿、需求、采用或满意度。
+- 真实产能、人员表现、服务质量或运营结果。
+- 法律意见、认证、签名、公证或商店审核。
+- 现实收入、收益、损失、成本、周期或质量。
 
-The validator still exists when decisive tests require reality. Its deliverable becomes the test design, evidence requirement, sample or environment, acceptance threshold, failure route, and stop/go logic.
+状态为：
 
-### Feasibility statuses
+- `plan-viable`：适用的方案级门通过，在事实和假设下无已知阻碍；现实检查仍需明确。
+- `conditionally-viable`：路径基本成立，但依赖明确证据、资源、批准、集成或测试。
+- `not-yet-viable`：已知阻碍、矛盾或不可接受风险阻止当前推荐。
 
-Assign exactly one:
+不要给普通技术方案机械添加状态，也不要把置信度写成现实成功概率。
 
-- **`plan-viable` / 方案级可行:** All applicable plan-level gates pass; no known unresolved blocker remains under stated facts and assumptions; required reality checks are explicit.
-- **`conditionally-viable` / 有条件可行:** The path is coherent, but one or more decisive assumptions, approvals, resources, integrations, or tests are unresolved.
-- **`not-yet-viable` / 暂不具备可行性:** A known blocker, contradiction, unacceptable risk, or missing critical path prevents responsible recommendation.
+## 冲突、返工与停止
 
-Never present confidence as a probability of real success. Never call a plan “proven feasible” without empirical execution evidence.
-
-## Conflict and replanning
-
-Route:
-
-| Conflict | Default owner and response |
+| 情况 | 默认处理 |
 |---|---|
-| Artifact defect | Producer revises against the existing criterion |
-| Interface mismatch | Integrator coordinates a shared contract |
-| Producer-validator disagreement | Decision owner applies the declared gate |
-| Missing capability or lifecycle owner | `R0` adds or reshapes a role |
-| Evidence dispute | Use the least certain defensible label |
-| Goal conflict | Branch or surface the decision to the user |
-| Feasibility blocker | Narrow scope, change path, add a prerequisite, or stop |
-| Boundary violation | Stop the event and restate it as a plan-level action |
+| 成果缺陷 | 原生产者按既有标准修订 |
+| 接口冲突 | 整合责任协调共享契约 |
+| 生产者与验证者分歧 | 决策责任按预先质量门裁决 |
+| 缺少能力或阶段责任 | `R0` 调整角色，不亲自补位 |
+| 证据争议 | 采用最保守且可辩护的标签 |
+| 与用户目标冲突 | 分支或把真正决定交还用户 |
+| 可行性阻碍 | 缩小范围、更换路径、增加前提或停止 |
+| 边界违规 | 停止并改写为诚实的未来动作或方案结论 |
 
-Trigger replanning when a stage is unowned, a primary artifact has no producer, a critical artifact lacks credible validation, a loop has no seed, assumptions conflict, resources cannot support the path, or the integrated guide cannot meet the definition of done even conditionally.
+结构性重设计最多两轮。同一阻碍仍然存在时，公开条件或判为暂不具备可行性，不虚构进展。
 
-Allow at most two structural redesign cycles. Resume at the earliest affected stage.
+结束条件与用户请求匹配：
 
-## Scenario rules
+- 方案请求：核心设计、关键取舍和必要验证已经足够具体，组织审查没有挤掉方案。
+- 目标请求：实质方案和实施路径均已形成，必要责任与验证闭环。
+- 既有方案实施：基线被尊重，拆分、依赖、交接、验收、发布与回退足以执行。
+- 正式可行性判断：条件和现实检查与结论一致。
 
-- Give every scenario explicit assumptions.
-- Show material formulas or reasoning.
-- Keep units and time windows compatible.
-- Prefer ranges over false precision.
-- Separate controllable choices from external conditions.
-- Name the evidence that would replace each assumption.
-- Test a downside case and a failure-recovery case when consequences matter.
-- Never make simulated time appear to have elapsed.
+## 失败模式
 
-Scenario completion is not real-world success.
+- **组织先行：** 先列团队，再寻找它们要做什么。
+- **方案空心化：** 角色和流程很多，却没有具体技术、产品或业务内容。
+- **顾问组织：** 只有策略和架构，没有生产、验证或运行责任。
+- **协调者越权：** `R0` 填补所有领域缺口。
+- **角色表演：** 对话替代成果、标准、决策和修改。
+- **虚构执行：** 声称已经构建、测试、联系、部署、获批或产生指标。
+- **假设洗白：** 多个角色重复后，假设看起来像事实。
+- **可行性膨胀：** 内部一致被描述为现实成功。
+- **固定输出：** 无论请求为何都显示边界、团队、图、评审史和现实清单。
+- **既有方案失真：** 实施请求被重新路由为从零设计。
 
-## Stop conditions
+## 完整性检查
 
-Stop as `plan-viable` only when:
-
-- Every applicable stage is represented or explicitly deferred.
-- Primary work products have producers.
-- Critical products passed credible plan-level validation.
-- Rejected work was revised, branched, or resolved.
-- Accepted work was integrated into a usable implementation guide.
-- Delivery, operation, and learning are planned where applicable.
-- No known plan-level blocker remains.
-- Assumptions, reality checks, risks, and stop conditions remain visible.
-- Comprehension, Mermaid, lifecycle, traceability, and boundary gates pass.
-
-Stop as `conditionally-viable` when the guide is coherent but decisive conditions remain. Stop as `not-yet-viable` when a critical input cannot be bounded, safe scope cannot be established, two redesign cycles fail, or every path misses the definition of done.
-
-Say “the plan-level validation completed,” never “the real goal was achieved.”
-
-## Failure modes
-
-- **Advisory-only organization:** Architects and strategists exist, but implementers or operators do not.
-- **Missing test function:** Producers approve their own critical work.
-- **Orchestrator collapse:** `R0` fills every missing role.
-- **Persona theater:** Dialogue replaces reviewable artifacts and decisions.
-- **Phantom execution:** The result claims builds, tests, contacts, deployment, metrics, returns, or elapsed time.
-- **Assumption laundering:** Repetition turns an assumption into apparent fact.
-- **Feasibility inflation:** Internal consistency is described as real-world proof.
-- **Simulation-first output:** The user sees a long collaboration story before the recommendation.
-- **Table wall:** Processes and handoffs are hidden in dense tables.
-- **Schema-first writing:** IDs dominate the visible answer.
-- **Guide gap:** A verdict exists, but the user receives no phased route for acting on it.
-
-## Final integrity audit
-
-- [ ] The boundary notice appears once and is localized.
-- [ ] The recommendation and feasibility status appear before detailed simulation history.
-- [ ] The complete applicable lifecycle is represented.
-- [ ] Producer, validator, integrator, delivery, and operating roles exist where needed.
-- [ ] Roles use normal professional names.
-- [ ] No external action or observation is claimed.
-- [ ] Every material event changes an artifact, decision, path, verdict, or guide.
-- [ ] Plan-level and real-world validation are distinguished.
-- [ ] Rejections and revisions remain traceable.
-- [ ] Complex flows use valid Mermaid.
-- [ ] The implementation guide contains phases, owners, gates, risks, and first actions.
-- [ ] Reality checks name methods and acceptance thresholds where possible.
-- [ ] The user receives only the most important remaining decisions.
+- [ ] 已先理解交付意图，再开始组织推演。
+- [ ] 当前请求确实需要 `simulated_team`。
+- [ ] 第一屏仍然是方案、建议或实施重点。
+- [ ] 组织从需要解决的结果、能力、风险和交接推导。
+- [ ] `R0` 唯一且不替代领域生产或验证。
+- [ ] 关键成果有生产者、消费者、预先标准和必要的独立验证。
+- [ ] 只展示改变推荐的协作和返工。
+- [ ] 正式可行性状态仅在相关时出现且不夸大现实证据。
+- [ ] 没有声称未发生的现实开发、测试、反馈、部署、收益或批准。
+- [ ] 答案结构和篇幅仍然贴合用户原始请求。
